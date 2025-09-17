@@ -2,143 +2,82 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>To-Do List App</title>
+  <title>Weather App</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f4f4f4;
+      background: linear-gradient(to right, #6dd5ed, #2193b0);
+      color: white;
       display: flex;
       justify-content: center;
-      padding: 40px;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
     .container {
-      width: 400px;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    h1 {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 30px;
+      border-radius: 10px;
       text-align: center;
+      width: 350px;
     }
-    #taskInput {
-      width: 75%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    #addBtn {
+    input {
+      width: 70%;
       padding: 10px;
       border: none;
-      background: #007bff;
-      color: white;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    #addBtn:hover {
-      background: #0056b3;
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-      margin-top: 20px;
-    }
-    li {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px;
-      border-bottom: 1px solid #ddd;
-    }
-    li.completed span {
-      text-decoration: line-through;
-      color: gray;
+      border-radius: 5px;
+      margin-bottom: 15px;
     }
     button {
-      margin-left: 5px;
+      padding: 10px 15px;
       border: none;
+      border-radius: 5px;
+      background: #ff9800;
+      color: white;
       cursor: pointer;
-      padding: 5px 8px;
-      border-radius: 4px;
     }
-    .completeBtn {
-      background: #28a745;
-      color: white;
+    button:hover {
+      background: #e68900;
     }
-    .deleteBtn {
-      background: #dc3545;
-      color: white;
+    #weather {
+      margin-top: 20px;
+    }
+    #weather img {
+      width: 60px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>📝 To-Do List</h1>
-    <input type="text" id="taskInput" placeholder="Enter a new task">
-    <button id="addBtn">Add</button>
-    <ul id="taskList"></ul>
+    <h1>🌤 Weather App</h1>
+    <input type="text" id="cityInput" placeholder="Enter city name">
+    <button onclick="getWeather()">Search</button>
+    <div id="weather"></div>
   </div>
 
   <script>
-    const taskInput = document.getElementById('taskInput');
-    const addBtn = document.getElementById('addBtn');
-    const taskList = document.getElementById('taskList');
+    async function getWeather() {
+      const city = document.getElementById("cityInput").value;
+      if (!city) return alert("Please enter a city name!");
 
-    // Load tasks from localStorage
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+      const apiKey = "YOUR_API_KEY"; // <- apna OpenWeather API key daalo
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
 
-    function renderTasks() {
-      taskList.innerHTML = '';
-      tasks.forEach((task, index) => {
-        const li = document.createElement('li');
-        li.className = task.completed ? 'completed' : '';
-        
-        const span = document.createElement('span');
-        span.textContent = task.text;
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("City not found!");
+        const data = await res.json();
 
-        const completeBtn = document.createElement('button');
-        completeBtn.textContent = '✔';
-        completeBtn.className = 'completeBtn';
-        completeBtn.onclick = () => toggleComplete(index);
-
-        const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = '✖';
-        deleteBtn.className = 'deleteBtn';
-        deleteBtn.onclick = () => deleteTask(index);
-
-        li.appendChild(span);
-        li.appendChild(completeBtn);
-        li.appendChild(deleteBtn);
-        taskList.appendChild(li);
-      });
-      localStorage.setItem('tasks', JSON.stringify(tasks));
-    }
-
-    function addTask() {
-      const text = taskInput.value.trim();
-      if (text) {
-        tasks.push({ text, completed: false });
-        taskInput.value = '';
-        renderTasks();
+        document.getElementById("weather").innerHTML = `
+          <h2>${data.name}, ${data.sys.country}</h2>
+          <p><strong>${data.main.temp}°C</strong></p>
+          <p>${data.weather[0].description}</p>
+          <img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png">
+        `;
+      } catch (err) {
+        document.getElementById("weather").innerHTML = `<p>❌ ${err.message}</p>`;
       }
     }
-
-    function toggleComplete(index) {
-      tasks[index].completed = !tasks[index].completed;
-      renderTasks();
-    }
-
-    function deleteTask(index) {
-      tasks.splice(index, 1);
-      renderTasks();
-    }
-
-    addBtn.addEventListener('click', addTask);
-    taskInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') addTask();
-    });
-
-    renderTasks();
   </script>
 </body>
-  </html>
+</html>
