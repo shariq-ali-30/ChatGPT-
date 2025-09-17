@@ -1,83 +1,934 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Weather App</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #6dd5ed, #2193b0);
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .container {
-      background: rgba(0, 0, 0, 0.5);
-      padding: 30px;
-      border-radius: 10px;
-      text-align: center;
-      width: 350px;
-    }
-    input {
-      width: 70%;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      margin-bottom: 15px;
-    }
-    button {
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
-      background: #ff9800;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #e68900;
-    }
-    #weather {
-      margin-top: 20px;
-    }
-    #weather img {
-      width: 60px;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>TaskForge — Heavy Task Manager</title>
+<style>
+  /* =========================
+     TaskForge — CSS (Large)
+     ========================= */
+  :root{
+    --bg:#0f1724;
+    --card:#0b1220;
+    --muted:#94a3b8;
+    --accent:#7c3aed; /* purple */
+    --accent-2:#06b6d4; /* teal */
+    --danger:#ef4444;
+    --success:#10b981;
+    --glass: rgba(255,255,255,0.04);
+    --glass-2: rgba(255,255,255,0.02);
+    --radius:12px;
+    --max-width:1200px;
+  }
+  *{box-sizing:border-box}
+  html,body{
+    margin:0;
+    padding:0;
+    height:100%;
+    font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: linear-gradient(180deg, #071025 0%, #0d1520 50%, #071025 100%);
+    color: #e6eef8;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  .app {
+    max-width: var(--max-width);
+    margin: 28px auto;
+    display: grid;
+    grid-template-columns: 260px 1fr 320px;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: 0 6px 24px rgba(2,6,23,0.6);
+    height: calc(100vh - 80px);
+    overflow:auto;
+  }
+  .brand {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:12px;
+  }
+  .logo {
+    width:44px;height:44px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    display:flex;align-items:center;justify-content:center;font-weight:700;
+    box-shadow: 0 4px 14px rgba(124,58,237,0.25);
+  }
+  h1.app-title {font-size:16px;margin:0}
+  p.small {margin:0;color:var(--muted);font-size:13px}
+
+  .side-section {margin-top:18px}
+  .btn {display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
+  .primary {background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white}
+  .ghost {background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+
+  .nav-list{margin-top:12px;padding:0;list-style:none}
+  .nav-list li{padding:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;color:var(--muted)}
+  .nav-list li:hover{background:var(--glass)}
+  .nav-list li.active{background:linear-gradient(90deg, rgba(124,58,237,0.12), rgba(6,182,212,0.06));color:white}
+
+  .projects {
+    margin-top:14px;
+  }
+  .project-item {
+    padding:8px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;color:var(--muted);
+    margin-bottom:6px;cursor:pointer;
+  }
+  .project-item:hover{background:var(--glass)}
+  .project-dot {width:10px;height:10px;border-radius:50%}
+
+  /* Main area */
+  .main {
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius: var(--radius);
+    padding: 18px;
+    min-height: calc(100vh - 80px);
+    overflow:hidden;
+    display:flex;flex-direction:column;
+  }
+
+  .top-row {display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .searchbar {
+    display:flex;align-items:center;gap:8px;background:var(--glass);padding:8px;border-radius:10px;width:60%;
+  }
+  .searchbar input{background:transparent;border:none;color:inherit;outline:none;width:100%}
+  .controls {display:flex;gap:8px;align-items:center}
+  .chip {background:var(--glass);padding:6px 10px;border-radius:999px;font-size:13px;color:var(--muted);cursor:pointer}
+
+  .board {
+    display:flex;
+    gap:14px;
+    margin-top:18px;
+    flex:1;
+    overflow:auto;
+    padding-bottom:16px;
+  }
+
+  .column {
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+    border-radius:10px;padding:12px;min-width:280px;max-width:320px;height:calc(100% - 20px);
+    display:flex;flex-direction:column;
+  }
+  .column h3 {margin:0 0 8px 0;display:flex;justify-content:space-between;align-items:center}
+  .column .dropzone {flex:1;overflow:auto;padding:6px;border-radius:8px}
+
+  .task-card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:10px;padding:10px;margin-bottom:10px;cursor:grab;border:1px solid rgba(255,255,255,0.02);
+    box-shadow: 0 6px 18px rgba(2,6,23,0.45);
+  }
+  .task-card:hover {transform:translateY(-2px);transition:all .12s ease}
+
+  .task-title {font-weight:600;margin:0 0 6px 0}
+  .task-meta {display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted)}
+  .tag {padding:4px 8px;border-radius:6px;font-size:11px}
+
+  /* Right sidebar */
+  .inspector {
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    padding:16px;border-radius:var(--radius);height:calc(100vh - 80px);overflow:auto;
+  }
+  .section-title {font-size:13px;color:var(--muted);margin-bottom:8px}
+  label {display:block;font-size:13px;margin-bottom:6px;color:var(--muted)}
+  input[type="text"], input[type="date"], select, textarea {
+    width:100%;padding:8px;border-radius:8px;border:none;background:var(--glass-2);color:inherit;outline:none;
+  }
+  textarea {min-height:90px;resize:vertical;padding:10px}
+
+  .small-muted {font-size:12px;color:var(--muted)}
+  .stat {display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px dashed rgba(255,255,255,0.02)}
+  .stat strong{color:white}
+
+  /* Modal */
+  .modal-backdrop {
+    position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center;z-index:1200;
+  }
+  .modal {
+    width:760px;max-width:95%;background:linear-gradient(180deg,#071025, #0c1320);border-radius:12px;padding:18px;
+    box-shadow: 0 12px 40px rgba(2,6,23,0.5);
+  }
+
+  .form-grid {display:grid;grid-template-columns:1fr 160px;gap:12px}
+  .row {display:flex;gap:8px}
+
+  /* footer small */
+  .footer {
+    margin-top:12px;color:var(--muted);font-size:13px;text-align:center;
+  }
+
+  /* responsive */
+  @media (max-width:1000px){
+    .app {grid-template-columns: 1fr; padding:12px}
+    .sidebar{height:auto;order:3}
+    .inspector{order:4}
+    .main{order:2}
+    .board{overflow-x:auto}
+  }
+
+  /* utilities */
+  .flex{display:flex;align-items:center}
+  .space{flex:1}
+  .muted{color:var(--muted)}
+  .danger{color:var(--danger)}
+  .success{color:var(--success)}
+  .pill{padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.03)}
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>🌤 Weather App</h1>
-    <input type="text" id="cityInput" placeholder="Enter city name">
-    <button onclick="getWeather()">Search</button>
-    <div id="weather"></div>
+  <div class="app" id="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="logo">TF</div>
+        <div>
+          <h1 class="app-title">TaskForge</h1>
+          <p class="small">Powerful web task manager</p>
+        </div>
+      </div>
+
+      <div class="side-section">
+        <button class="btn primary" id="addTaskBtn">+ New Task</button>
+        <button class="btn ghost" id="addProjectBtn" style="margin-left:8px">+ Project</button>
+      </div>
+
+      <div class="side-section">
+        <ul class="nav-list" id="navList">
+          <li data-filter="inbox" class="active">Inbox <span class="muted">•</span></li>
+          <li data-filter="today">Today</li>
+          <li data-filter="upcoming">Upcoming</li>
+          <li data-filter="completed">Completed</li>
+        </ul>
+      </div>
+
+      <div class="side-section projects">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <strong>Projects</strong>
+          <button class="btn" id="collapseProjects" title="collapse">—</button>
+        </div>
+        <div id="projectList" style="margin-top:10px"></div>
+      </div>
+
+      <div class="side-section" style="margin-top:20px">
+        <div class="small-muted">Shortcuts</div>
+        <div style="margin-top:8px" class="small-muted">
+          <div>⎋ close modal | N new task | F search</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main" id="main">
+      <div class="top-row">
+        <div class="searchbar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="1.5"/></svg>
+          <input id="globalSearch" placeholder="Search tasks, tags, projects..." />
+        </div>
+        <div class="controls">
+          <div class="chip" id="filterPriority">Priority: All</div>
+          <div class="chip" id="filterTag">Tag: Any</div>
+          <div class="chip" id="viewToggle">Kanban View</div>
+        </div>
+      </div>
+
+      <div class="board" id="board">
+        <!-- Columns: Todo, In Progress, Done -->
+        <div class="column" data-col="todo">
+          <h3>To Do <span class="muted" id="countTodo"></span></h3>
+          <div class="dropzone" data-zone="todo"></div>
+        </div>
+        <div class="column" data-col="inprogress">
+          <h3>In Progress <span class="muted" id="countIn"></span></h3>
+          <div class="dropzone" data-zone="inprogress"></div>
+        </div>
+        <div class="column" data-col="done">
+          <h3>Done <span class="muted" id="countDone"></span></h3>
+          <div class="dropzone" data-zone="done"></div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <span id="summaryText">0 tasks • 0 projects • synced to localStorage</span>
+      </div>
+    </main>
+
+    <!-- Inspector / Right column -->
+    <aside class="inspector" id="inspector">
+      <div class="section-title">Task Details</div>
+      <div id="inspectorContent">
+        <div class="small-muted">Select a task to view/edit details</div>
+      </div>
+
+      <div style="margin-top:18px">
+        <div class="section-title">Stats</div>
+        <div class="stat"><span>All tasks</span><strong id="statAll">0</strong></div>
+        <div class="stat"><span>Completed</span><strong id="statDone">0</strong></div>
+        <div class="stat"><span>Overdue</span><strong id="statOver">0</strong></div>
+      </div>
+
+      <div style="margin-top:18px">
+        <div class="section-title">Backup / Restore</div>
+        <button class="btn" id="exportBtn">Export JSON</button>
+        <button class="btn" id="importBtn">Import JSON</button>
+        <input type="file" id="importFile" accept=".json" style="display:none" />
+      </div>
+    </aside>
   </div>
 
-  <script>
-    async function getWeather() {
-      const city = document.getElementById("cityInput").value;
-      if (!city) return alert("Please enter a city name!");
+  <!-- Modal: Task Editor -->
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h2 id="modalTitle">New Task</h2>
+      <div class="form-grid" style="margin-top:12px">
+        <div>
+          <label>Title</label>
+          <input type="text" id="taskTitle" placeholder="Task title..." />
 
-      const apiKey = "YOUR_API_KEY"; // <- apna OpenWeather API key daalo
-      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
+          <label style="margin-top:10px">Description</label>
+          <textarea id="taskDesc" placeholder="Details..."></textarea>
 
-      try {
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("City not found!");
-        const data = await res.json();
+          <label style="margin-top:10px">Tags (comma separated)</label>
+          <input type="text" id="taskTags" placeholder="e.g. frontend,bug,urgent" />
+        </div>
 
-        document.getElementById("weather").innerHTML = `
-          <h2>${data.name}, ${data.sys.country}</h2>
-          <p><strong>${data.main.temp}°C</strong></p>
-          <p>${data.weather[0].description}</p>
-          <img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png">
-        `;
-      } catch (err) {
-        document.getElementById("weather").innerHTML = `<p>❌ ${err.message}</p>`;
-      }
+        <div>
+          <label>Project</label>
+          <select id="taskProject"></select>
+
+          <label style="margin-top:8px">Priority</label>
+          <select id="taskPriority">
+            <option value="low">Low</option>
+            <option value="med" selected>Medium</option>
+            <option value="high">High</option>
+          </select>
+
+          <label style="margin-top:8px">Due Date</label>
+          <input type="date" id="taskDue" />
+
+          <label style="margin-top:8px">Column</label>
+          <select id="taskColumn">
+            <option value="todo">To Do</option>
+            <option value="inprogress">In Progress</option>
+            <option value="done">Done</option>
+          </select>
+
+          <div style="margin-top:14px;display:flex;gap:8px">
+            <button class="btn primary" id="saveTaskBtn">Save Task</button>
+            <button class="btn ghost" id="cancelTaskBtn">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+/* =========================
+   TaskForge — JavaScript
+   ========================= */
+
+/* Data model:
+   - tasks: array of { id, title, desc, tags:[], project, priority, due (ISO), column, createdAt, updatedAt, completed }
+   - projects: array of { id, name, color }
+*/
+
+// Utilities
+const uid = (prefix='id') => prefix + '_' + Math.random().toString(36).slice(2,9);
+const todayISO = () => new Date().toISOString().split('T')[0];
+const byId = id => document.getElementById(id);
+
+// App state
+const STATE_KEY = 'taskforge_v1';
+let state = {
+  tasks: [],
+  projects: [],
+  ui: {
+    activeProject: null,
+    filter: 'inbox', // inbox|today|upcoming|completed
+    priority: null,
+    tag: null,
+    view: 'kanban', // kanban | list (future)
+    search: ''
+  }
+};
+
+/* ------------------------------
+   Persistence: load / save
+   ------------------------------ */
+function saveState() {
+  try {
+    localStorage.setItem(STATE_KEY, JSON.stringify(state));
+    updateSummary();
+  } catch(e) { console.error('Save failed', e) }
+}
+function loadState() {
+  const raw = localStorage.getItem(STATE_KEY);
+  if (raw) {
+    try {
+      state = JSON.parse(raw);
+      // make sure arrays exist
+      state.tasks = state.tasks || [];
+      state.projects = state.projects || [];
+      state.ui = state.ui || state.ui;
+    } catch(e) {
+      console.error('Failed parsing state', e);
     }
-  </script>
+  } else {
+    // seed with sample data (so the app looks alive)
+    seedData();
+    saveState();
+  }
+}
+
+/* ------------------------------
+   Sample seed data
+   ------------------------------ */
+function seedData() {
+  const p1 = { id: uid('proj'), name: 'Personal', color: '#7c3aed' };
+  const p2 = { id: uid('proj'), name: 'Work', color: '#06b6d4' };
+  state.projects = [p1, p2];
+  state.tasks = [
+    { id: uid('t'), title: 'Plan weekend trip', desc: 'Decide destination and budget', tags: ['travel'], project: p1.id, priority: 'med', due: addDaysIso(2), column: 'todo', createdAt: nowISO(), updatedAt: nowISO(), completed:false },
+    { id: uid('t'), title: 'Finish report Q3', desc: 'Add numbers and finalize slides', tags: ['work','urgent'], project: p2.id, priority: 'high', due: addDaysIso(1), column: 'inprogress', createdAt: nowISO(), updatedAt: nowISO(), completed:false },
+    { id: uid('t'), title: 'Buy groceries', desc: '', tags: ['home'], project: p1.id, priority: 'low', due: addDaysIso(0), column: 'todo', createdAt: nowISO(), updatedAt: nowISO(), completed:false },
+    { id: uid('t'), title: 'Cleanup inbox', desc: 'Archive old emails', tags: ['work'], project: p2.id, priority: 'low', due: null, column: 'todo', createdAt: nowISO(), updatedAt: nowISO(), completed:false }
+  ];
+}
+function nowISO(){ return new Date().toISOString(); }
+function addDaysIso(days){ const d = new Date(); d.setDate(d.getDate() + days); return d.toISOString().split('T')[0]; }
+
+/* ------------------------------
+   Rendering
+   ------------------------------ */
+
+function $(sel, root=document) { return root.querySelector(sel) }
+function $all(sel, root=document) { return Array.from(root.querySelectorAll(sel)) }
+
+function render() {
+  renderProjects();
+  renderBoard();
+  renderInspector();
+  renderStats();
+  saveState();
+}
+
+/* Projects list on sidebar */
+function renderProjects() {
+  const container = byId('projectList');
+  container.innerHTML = '';
+  state.projects.forEach(p => {
+    const el = document.createElement('div');
+    el.className = 'project-item';
+    el.dataset.proj = p.id;
+    el.innerHTML = `<div style="display:flex;gap:8px;align-items:center">
+        <div class="project-dot" style="background:${p.color}"></div>
+        <div>${p.name}</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn ghost" title="rename" onclick="renameProject('${p.id}', event)">✎</button>
+        <button class="btn ghost" title="delete" onclick="deleteProject('${p.id}', event)">🗑</button>
+      </div>`;
+    container.appendChild(el);
+  });
+  // update project select in modal
+  const select = byId('taskProject');
+  select.innerHTML = '<option value="">— Select project —</option>';
+  state.projects.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = p.name;
+    select.appendChild(opt);
+  });
+}
+
+/* Board rendering (kanban) */
+function renderBoard() {
+  // clear dropzones
+  $all('.dropzone').forEach(z => z.innerHTML = '');
+
+  const filtered = getFilteredTasks();
+
+  // populate columns
+  const cols = { todo:[], inprogress:[], done:[] };
+  filtered.forEach(t => cols[t.column || 'todo'].push(t));
+
+  // create cards
+  for (const col in cols) {
+    const zone = document.querySelector(`.dropzone[data-zone="${col}"]`);
+    cols[col].sort((a,b) => priorityRank(b.priority)-priorityRank(a.priority));
+    cols[col].forEach(task => {
+      const card = createTaskCard(task);
+      zone.appendChild(card);
+    });
+    // update counts
+    if (col==='todo') byId('countTodo').textContent = `${cols[col].length}`;
+    if (col==='inprogress') byId('countIn').textContent = `${cols[col].length}`;
+    if (col==='done') byId('countDone').textContent = `${cols[col].length}`;
+  }
+  // enable drag events
+  addDragDrop();
+  updateSummary();
+}
+
+/* Create DOM for a task card */
+function createTaskCard(task) {
+  const el = document.createElement('div');
+  el.className = 'task-card';
+  el.draggable = true;
+  el.dataset.id = task.id;
+
+  const project = state.projects.find(p => p.id === task.project);
+  const tagsHtml = (task.tags || []).slice(0,3).map(tag => `<span class="tag pill" style="background:rgba(255,255,255,0.03)">${escapeHtml(tag)}</span>`).join(' ');
+
+  const dueClass = (task.due && isPast(task.due) && !task.completed) ? 'danger' : '';
+  el.innerHTML = `
+    <div class="row">
+      <div style="flex:1">
+        <div class="task-title">${escapeHtml(task.title)}</div>
+        <div class="task-meta">
+          <span class="small-muted">${project ? project.name : 'No project'}</span>
+          <span>${tagsHtml}</span>
+        </div>
+      </div>
+      <div style="text-align:right;min-width:72px">
+        <div class="small-muted">${task.priority === 'high' ? '<strong class="danger">High</strong>' : (task.priority==='med' ? '<span class="small-muted">Med</span>' : '<span class="small-muted">Low</span>')}</div>
+        <div class="${dueClass}">${task.due ? formatDate(task.due) : ''}</div>
+      </div>
+    </div>
+  `;
+  // click to open inspector
+  el.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openInspector(task.id);
+  });
+  // double click edit
+  el.addEventListener('dblclick', (e) => {
+    e.stopPropagation();
+    openTaskModal(task.id);
+  });
+  return el;
+}
+
+/* Inspector rendering */
+function renderInspector(taskId) {
+  const container = byId('inspectorContent');
+  if (!taskId) {
+    container.innerHTML = '<div class="small-muted">Select a task to view/edit details</div>';
+    return;
+  }
+  const task = state.tasks.find(t => t.id === taskId);
+  if (!task) { container.innerHTML = '<div class="small-muted">Task not found</div>'; return; }
+
+  const project = state.projects.find(p => p.id === task.project);
+  container.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3 style="margin:0">${escapeHtml(task.title)}</h3>
+      <div style="display:flex;gap:8px">
+        <button class="btn ghost" id="editIns">Edit</button>
+        <button class="btn ghost" id="delIns">Delete</button>
+      </div>
+    </div>
+    <div style="margin-top:8px" class="small-muted">Project: ${project ? escapeHtml(project.name) : '—'}</div>
+    <div style="margin-top:10px">${task.desc ? escapeHtml(task.desc) : '<span class="small-muted">No description</span>'}</div>
+    <div style="margin-top:12px">
+      <div class="small-muted">Tags</div>
+      <div style="margin-top:6px">${(task.tags||[]).map(t=>`<span class="tag pill">${escapeHtml(t)}</span>`).join(' ')}</div>
+    </div>
+    <div style="margin-top:12px">
+      <div class="small-muted">Due</div>
+      <div style="margin-top:6px">${task.due ? formatDate(task.due) : '<span class="small-muted">No due date</span>'}</div>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
+      <label class="small-muted">Completed</label>
+      <input type="checkbox" id="insCompleted" ${task.completed ? 'checked' : ''} />
+    </div>
+  `;
+  // attach events
+  byId('editIns').onclick = () => openTaskModal(task.id);
+  byId('delIns').onclick = () => { if(confirm('Delete this task?')) { deleteTask(task.id); } };
+  byId('insCompleted').onchange = (e) => { task.completed = e.target.checked; saveTask(task); render(); };
+}
+
+/* Stats rendering */
+function renderStats() {
+  byId('statAll').textContent = state.tasks.length;
+  byId('statDone').textContent = state.tasks.filter(t=>t.completed).length;
+  byId('statOver').textContent = state.tasks.filter(t=>t.due && isPast(t.due) && !t.completed).length;
+}
+
+/* ------------------------------
+   Filtering & helpers
+   ------------------------------ */
+
+function getFilteredTasks() {
+  let list = state.tasks.slice();
+
+  // Global search
+  const q = (state.ui.search || '').trim().toLowerCase();
+  if (q) {
+    list = list.filter(t => (t.title||'').toLowerCase().includes(q) || (t.desc||'').toLowerCase().includes(q) || (t.tags||[]).join(' ').toLowerCase().includes(q));
+  }
+
+  // By sidebar filter
+  if (state.ui.filter === 'today') {
+    const s = todayISO();
+    list = list.filter(t => t.due === s);
+  } else if (state.ui.filter === 'upcoming') {
+    const s = todayISO();
+    list = list.filter(t => t.due && t.due >= s);
+  } else if (state.ui.filter === 'completed') {
+    list = list.filter(t => t.completed);
+  }
+
+  // Project filter
+  if (state.ui.activeProject) {
+    list = list.filter(t => t.project === state.ui.activeProject);
+  }
+  // priority filter
+  if (state.ui.priority) {
+    list = list.filter(t => t.priority === state.ui.priority);
+  }
+  // tag filter
+  if (state.ui.tag) {
+    list = list.filter(t => (t.tags||[]).includes(state.ui.tag));
+  }
+  return list;
+}
+
+function priorityRank(p) {
+  if (p==='high') return 3;
+  if (p==='med') return 2;
+  return 1;
+}
+
+function isPast(dateIso) {
+  if (!dateIso) return false;
+  const d = new Date(dateIso + 'T23:59:59');
+  return d < new Date();
+}
+function formatDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString();
+}
+function escapeHtml(s){ return String(s || '').replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+
+/* ------------------------------
+   CRUD operations
+   ------------------------------ */
+
+function createTask(data) {
+  const t = {
+    id: uid('t'),
+    title: data.title || 'Untitled',
+    desc: data.desc || '',
+    tags: data.tags || [],
+    project: data.project || null,
+    priority: data.priority || 'med',
+    due: data.due || null,
+    column: data.column || 'todo',
+    createdAt: nowISO(),
+    updatedAt: nowISO(),
+    completed: false
+  };
+  state.tasks.push(t);
+  saveState();
+  render();
+  return t;
+}
+function updateTask(id, patch) {
+  const t = state.tasks.find(x => x.id === id);
+  if (!t) return null;
+  Object.assign(t, patch);
+  t.updatedAt = nowISO();
+  saveState();
+  render();
+  return t;
+}
+function saveTask(task) {
+  updateTask(task.id, task);
+}
+function deleteTask(id) {
+  const idx = state.tasks.findIndex(t => t.id === id);
+  if (idx >= 0) {
+    state.tasks.splice(idx,1);
+    saveState();
+    render();
+    byId('inspectorContent').innerHTML = '<div class="small-muted">Task deleted</div>';
+  }
+}
+
+/* ------------------------------
+   Projects CRUD
+   ------------------------------ */
+
+function addProject() {
+  const name = prompt('Project name');
+  if (!name) return;
+  const p = { id: uid('proj'), name: name.trim(), color: randomColor() };
+  state.projects.push(p);
+  saveState();
+  render();
+}
+function renameProject(id, e) {
+  if (e) e.stopPropagation();
+  const p = state.projects.find(x=>x.id===id);
+  if (!p) return;
+  const name = prompt('Rename project', p.name);
+  if (name) { p.name = name.trim(); saveState(); render(); }
+}
+function deleteProject(id, e) {
+  if (e) e.stopPropagation();
+  if (!confirm('Delete project and remove assignment from its tasks?')) return;
+  state.projects = state.projects.filter(p=>p.id !== id);
+  state.tasks.forEach(t => { if (t.project === id) t.project = null; });
+  saveState();
+  render();
+}
+function randomColor(){ return ['#7c3aed','#06b6d4','#f97316','#ef4444','#10b981'][Math.floor(Math.random()*5)]; }
+
+/* ------------------------------
+   Modal (Task editor)
+   ------------------------------ */
+
+const modal = byId('modalBackdrop');
+let editingTaskId = null;
+
+function openTaskModal(taskId=null) {
+  editingTaskId = taskId;
+  byId('modalBackdrop').style.display = 'flex';
+  byId('modalTitle').textContent = taskId ? 'Edit Task' : 'New Task';
+  if (taskId) {
+    const t = state.tasks.find(x=>x.id===taskId);
+    if (t) {
+      byId('taskTitle').value = t.title;
+      byId('taskDesc').value = t.desc;
+      byId('taskTags').value = (t.tags||[]).join(',');
+      byId('taskProject').value = t.project || '';
+      byId('taskPriority').value = t.priority || 'med';
+      byId('taskDue').value = t.due || '';
+      byId('taskColumn').value = t.column || 'todo';
+    }
+  } else {
+    byId('taskTitle').value = '';
+    byId('taskDesc').value = '';
+    byId('taskTags').value = '';
+    byId('taskProject').value = '';
+    byId('taskPriority').value = 'med';
+    byId('taskDue').value = '';
+    byId('taskColumn').value = 'todo';
+  }
+  // focus
+  setTimeout(()=> byId('taskTitle').focus(), 120);
+}
+
+function closeTaskModal() {
+  editingTaskId = null;
+  byId('modalBackdrop').style.display = 'none';
+}
+
+byId('addTaskBtn').addEventListener('click', () => openTaskModal());
+byId('addProjectBtn').addEventListener('click', () => addProject());
+byId('cancelTaskBtn').addEventListener('click', closeTaskModal);
+byId('modalBackdrop').addEventListener('click', (e) => {
+  if (e.target === byId('modalBackdrop')) closeTaskModal();
+});
+byId('saveTaskBtn').addEventListener('click', () => {
+  const title = byId('taskTitle').value.trim();
+  if (!title) { alert('Title required'); return; }
+  const data = {
+    title,
+    desc: byId('taskDesc').value.trim(),
+    tags: byId('taskTags').value.split(',').map(s=>s.trim()).filter(Boolean),
+    project: byId('taskProject').value || null,
+    priority: byId('taskPriority').value,
+    due: byId('taskDue').value || null,
+    column: byId('taskColumn').value || 'todo'
+  };
+  if (editingTaskId) {
+    updateTask(editingTaskId, data);
+  } else {
+    createTask(data);
+  }
+  closeTaskModal();
+});
+
+/* ------------------------------
+   Inspector open
+   ------------------------------ */
+function openInspector(taskId) {
+  renderInspector(taskId);
+  // store selection in state
+  state.ui.selectedTask = taskId;
+}
+
+/* ------------------------------
+   Drag & drop for kanban
+   ------------------------------ */
+function addDragDrop() {
+  const cards = $all('.task-card');
+  cards.forEach(c => {
+    c.ondragstart = (e) => {
+      e.dataTransfer.setData('text/plain', c.dataset.id);
+      c.classList.add('dragging');
+    };
+    c.ondragend = (e) => {
+      c.classList.remove('dragging');
+    };
+  });
+  const zones = $all('.dropzone');
+  zones.forEach(z => {
+    z.ondragover = (e) => { e.preventDefault(); z.style.background = 'rgba(255,255,255,0.02)'; }
+    z.ondragleave = (e) => { z.style.background = ''; }
+    z.ondrop = (e) => {
+      e.preventDefault();
+      z.style.background = '';
+      const id = e.dataTransfer.getData('text/plain');
+      const task = state.tasks.find(t=>t.id === id);
+      if (!task) return;
+      const newCol = z.dataset.zone;
+      task.column = newCol;
+      task.updatedAt = nowISO();
+      saveState();
+      render();
+    }
+  });
+}
+/* ------------------------------
+   Search, filters & UI events
+   ------------------------------ */
+
+byId('globalSearch').addEventListener('input', (e) => {
+  state.ui.search = e.target.value;
+  renderBoard();
+});
+
+// sidebar nav filters
+$all('#navList li').forEach(li => {
+  li.addEventListener('click', (e) => {
+    $all('#navList li').forEach(x => x.classList.remove('active'));
+    li.classList.add('active');
+    state.ui.filter = li.dataset.filter;
+    renderBoard();
+  });
+});
+
+byId('filterPriority').addEventListener('click', () => {
+  if (!state.ui.priority) state.ui.priority = 'high';
+  else if (state.ui.priority === 'high') state.ui.priority = 'med';
+  else if (state.ui.priority === 'med') state.ui.priority = 'low';
+  else state.ui.priority = null;
+  byId('filterPriority').textContent = `Priority: ${state.ui.priority || 'All'}`;
+  renderBoard();
+});
+
+byId('filterTag').addEventListener('click', () => {
+  const allTags = Array.from(new Set(state.tasks.flatMap(t => t.tags || [])));
+  const chosen = prompt('Enter tag to filter (existing: ' + allTags.join(', ') + ')');
+  state.ui.tag = chosen ? chosen.trim() : null;
+  byId('filterTag').textContent = `Tag: ${state.ui.tag || 'Any'}`;
+  renderBoard();
+});
+
+byId('viewToggle').addEventListener('click', () => {
+  state.ui.view = state.ui.view === 'kanban' ? 'list' : 'kanban';
+  byId('viewToggle').textContent = state.ui.view === 'kanban' ? 'Kanban View' : 'List View';
+  // (currently only kanban implemented, future: list view)
+  renderBoard();
+});
+
+/* ------------------------------
+   Export / Import
+   ------------------------------ */
+byId('exportBtn').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(state, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `taskforge_backup_${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+});
+
+byId('importBtn').addEventListener('click', () => byId('importFile').click());
+byId('importFile').addEventListener('change', (e) => {
+  const f = e.target.files[0];
+  if (!f) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (confirm('This will replace your current workspace. Continue?')) {
+        state = data;
+        saveState();
+        render();
+        alert('Imported successfully.');
+      }
+    } catch(err) { alert('Invalid file'); }
+  };
+  reader.readAsText(f);
+});
+
+/* ------------------------------
+   Keyboard shortcuts
+   ------------------------------ */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'N' || e.key === 'n') openTaskModal();
+  if (e.key === 'F' || e.key === 'f') { e.preventDefault(); byId('globalSearch').focus(); }
+  if (e.key === 'Escape') {
+    closeTaskModal();
+    // deselect inspector
+    state.ui.selectedTask = null;
+    renderInspector(null);
+  }
+});
+
+/* ------------------------------
+   Misc UI actions
+   ------------------------------ */
+
+byId('collapseProjects').addEventListener('click', (e) => {
+  const p = byId('projectList');
+  if (p.style.display === 'none') p.style.display = '';
+  else p.style.display = 'none';
+});
+
+/* ------------------------------
+   Helpers: summary
+   ------------------------------ */
+function updateSummary() {
+  const tcount = state.tasks.length;
+  const pcount = state.projects.length;
+  byId('summaryText').textContent = `${tcount} tasks • ${pcount} projects • synced to localStorage`;
+}
+
+/* ------------------------------
+   Boot
+   ------------------------------ */
+function boot() {
+  loadState();
+  render();
+  // click outside to close inspector selection
+  document.body.addEventListener('click', (e) => {
+    if (!e.target.closest('.inspector') && !e.target.closest('.task-card')) {
+      state.ui.selectedTask = null;
+      renderInspector(null);
+    }
+  });
+}
+boot();
+
+/* =========================
+   End of TaskForge JS
+   ========================= */
+</script>
 </body>
 </html>
