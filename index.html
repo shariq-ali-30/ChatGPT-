@@ -1,927 +1,977 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Atlas — Open-Meteo Weather (No API Key)</title>
-  <meta name="description" content="Advanced weather app using Open-Meteo (no API key)" />
-  <style>
-    /* ===========================
-       Atlas — Open-Meteo App Styles
-       ~ Responsive modern design
-       ~ Accessible and minimal
-       =========================== */
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>QuizMaster — Advanced Quiz App</title>
+<meta name="description" content="Advanced Quiz App (single file) with categories, timer, lifelines, leaderboard" />
+<style>
+  /* ============================
+     QuizMaster Styles
+     ============================ */
+  :root{
+    --bg: #0b1020;
+    --card: rgba(255,255,255,0.03);
+    --muted: rgba(255,255,255,0.72);
+    --accent: #60a5fa;
+    --accent-2: #7c3aed;
+    --success: #10b981;
+    --danger: #fb7185;
+    --glass: rgba(255,255,255,0.02);
+    --radius: 12px;
+    --max-w: 1100px;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+  }
 
-    :root{
-      --bg: #071023;
-      --card: rgba(255,255,255,0.03);
-      --muted: rgba(255,255,255,0.72);
-      --accent: #2dd4bf;
-      --accent-2: #60a5fa;
-      --radius: 12px;
-      --max-w: 1200px;
-      --glass: rgba(255,255,255,0.02);
-    }
+  *{box-sizing:border-box}
+  html,body,#app{height:100%}
+  body{
+    margin:0;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: radial-gradient(1200px 600px at 10% 10%, rgba(124,58,237,0.12), transparent 10%),
+                radial-gradient(900px 400px at 90% 90%, rgba(96,165,250,0.09), transparent 8%),
+                var(--bg);
+    color:#e9f0ff;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    padding:28px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
 
-    *{box-sizing:border-box}
-    html,body,#app{height:100%}
-    body{
-      margin:0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background: linear-gradient(180deg,#041028 0%, #081629 100%);
-      color:#eaf2fb;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      padding:28px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
+  .app{
+    width:100%;
+    max-width:var(--max-w);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:14px;
+    padding:18px;
+    box-shadow: 0 10px 40px rgba(2,6,23,0.7);
+    display:grid;
+    grid-template-columns: 320px 1fr;
+    gap:18px;
+  }
 
-    .container{
-      width:100%;
-      max-width:var(--max-w);
-      display:grid;
-      grid-template-columns: 360px 1fr;
-      gap:22px;
-      align-items:start;
-    }
+  /* Sidebar */
+  .sidebar{
+    padding:16px;
+    border-radius:12px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+    min-height:520px;
+  }
+  .brand{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+  .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;font-weight:800;color:#031; font-size:18px}
+  h1{font-size:18px;margin:0}
+  .lead{font-size:13px;color:var(--muted);margin-top:4px}
 
-    /* Sidebar */
-    .sidebar{
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:var(--radius);
-      padding:18px;
-      min-height:620px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.6);
-    }
-    .brand{display:flex;gap:12px;align-items:center;margin-bottom:6px}
-    .logo{
-      width:46px;height:46px;border-radius:10px;
-      display:grid;place-items:center;font-weight:800;color:#012;background:linear-gradient(135deg,var(--accent),var(--accent-2));
-      box-shadow: 0 6px 18px rgba(45,212,191,0.12);
-      font-size:20px;
-    }
-    h1{font-size:18px;margin:0}
-    p.lead{margin:2px 0 12px 0;color:var(--muted);font-size:13px}
+  .section{margin-top:12px}
+  label{display:block;font-size:13px;margin-bottom:6px;color:var(--muted)}
+  select,input[type="number"],textarea{
+    width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);
+    background:transparent;color:inherit;outline:none;font-size:14px;
+  }
+  .btn{display:inline-flex;gap:8px;align-items:center;background:var(--accent);color:#012;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+  .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);font-weight:600}
+  .small{font-size:13px;padding:6px 10px;border-radius:8px}
 
-    .search{display:flex;gap:8px;margin-bottom:12px}
-    .search input{
-      flex:1;padding:12px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);
-      background:transparent;color:inherit;outline:none;font-size:14px;
-    }
-    .btn{padding:10px 12px;border-radius:10px;border:none;background:var(--accent);color:#012;font-weight:700;cursor:pointer}
-    .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
-    .small{font-size:13px;padding:8px 10px;border-radius:8px}
+  .chip{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.02);font-size:13px;color:var(--muted)}
 
-    .help{font-size:12px;color:var(--muted);margin-top:8px}
+  .controls{display:flex;gap:8px;flex-wrap:wrap}
+  .muted{color:var(--muted)}
+  .help{font-size:12px;color:var(--muted);margin-top:8px}
 
-    .card{background:var(--card);border-radius:12px;padding:12px;margin-top:12px}
-    .fav-list .fav-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;color:var(--muted);cursor:pointer}
-    .fav-item:hover{background:rgba(255,255,255,0.01)}
-    .fav-city{font-weight:700}
-    .fav-meta{font-size:12px;color:var(--muted)}
+  /* Main area */
+  .main{
+    padding:16px;border-radius:12px;min-height:520px;position:relative;
+  }
 
-    /* Main panel */
-    .main{
-      background: linear-gradient(180deg, rgba(10,18,30,0.6), rgba(6,10,19,0.6));
-      border-radius:var(--radius);
-      padding:16px;
-      min-height:620px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-      position:relative;
-      overflow:hidden;
-    }
+  .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .meta{display:flex;gap:12px;align-items:center}
+  .progress{height:12px;background:rgba(255,255,255,0.03);border-radius:999px;overflow:hidden;width:320px}
+  .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));width:0%}
 
-    .bg-blobs{position:absolute;inset:0;z-index:0;pointer-events:none;mix-blend-mode:screen;opacity:0.11}
-    .blob{position:absolute;border-radius:50%;filter: blur(80px)}
-    .blob.a{width:420px;height:420px;background:linear-gradient(90deg,#2dd4bf,#60a5fa);top:-60px;right:-120px}
-    .blob.b{width:260px;height:260px;background:linear-gradient(90deg,#f97316,#f43f5e);bottom:-60px;left:-40px}
+  .question-card{margin-top:14px;background:var(--card);border-radius:12px;padding:16px;min-height:250px;display:flex;flex-direction:column;gap:12px}
+  .q-header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  .q-text{font-size:20px;font-weight:700}
+  .q-sub{font-size:13px;color:var(--muted)}
 
-    .current-wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;position:relative;z-index:1}
-    .current-left{display:flex;gap:14px;align-items:center}
-    .icon{width:84px;height:84px;border-radius:12px;background:rgba(255,255,255,0.02);display:grid;place-items:center}
-    .location{font-weight:800;font-size:20px}
-    .meta{font-size:13px;color:var(--muted)}
-    .desc{font-size:14px;color:var(--muted);margin-top:6px}
-    .temp{font-size:56px;font-weight:800;line-height:0.9;text-align:right}
+  .answers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+  .answer{
+    padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);cursor:pointer;border:1px solid rgba(255,255,255,0.02);
+    transition:all .18s;display:flex;align-items:center;gap:10px;font-size:15px;
+  }
+  .answer:hover{transform:translateY(-4px);box-shadow:0 8px 18px rgba(2,6,23,0.45)}
+  .answer.selected{border-color:var(--accent);box-shadow:0 8px 20px rgba(96,165,250,0.06)}
+  .answer.correct{background:linear-gradient(90deg, rgba(16,185,129,0.12), rgba(16,185,129,0.04));border-color:rgba(16,185,129,0.4)}
+  .answer.wrong{background:linear-gradient(90deg, rgba(251,113,133,0.06), rgba(251,113,133,0.03));border-color:rgba(251,113,133,0.3)}
 
-    .controls{display:flex;gap:8px;align-items:center}
+  .actions{display:flex;gap:8px;align-items:center;margin-top:12px}
+  .nav{display:flex;gap:8px;margin-left:auto}
+  .kbd{font-family:var(--mono);background:rgba(255,255,255,0.02);padding:6px 8px;border-radius:6px;font-size:13px;color:var(--muted)}
 
-    .hourly{display:flex;gap:8px;overflow:auto;padding:8px 4px;margin-top:8px}
-    .hour{min-width:86px;background:rgba(255,255,255,0.02);padding:10px;border-radius:10px;text-align:center;font-size:13px;color:var(--muted)}
-    .hour strong{display:block;margin-top:6px;font-size:14px}
+  .lifelines{display:flex;gap:8px}
+  .lifeline{padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.02);cursor:pointer;border:1px solid rgba(255,255,255,0.03)}
 
-    .daily-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:8px}
-    .day-card{padding:10px;border-radius:10px;background:rgba(255,255,255,0.01);font-size:13px}
+  .timer{font-weight:700;font-size:16px}
 
-    .details{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
-    .detail{background:rgba(255,255,255,0.02);padding:10px;border-radius:10px;text-align:center;font-size:13px}
-    .detail strong{display:block;font-size:16px;margin-bottom:6px}
+  /* Review / results */
+  .results{display:grid;grid-template-columns:1fr 320px;gap:12px}
+  .result-card{background:var(--card);padding:12px;border-radius:10px}
+  .leaderboard{margin-top:12px}
+  .leader-row{display:flex;justify-content:space-between;gap:8px;padding:8px;border-bottom:1px dashed rgba(255,255,255,0.02)}
+  .small-muted{font-size:12px;color:var(--muted)}
 
-    .placeholder{display:grid;place-items:center;padding:36px;color:var(--muted)}
+  /* Import area */
+  textarea{min-height:120px;resize:vertical}
 
-    /* smaller */
-    @media (max-width:980px){
-      .container{grid-template-columns:1fr;padding:0 8px}
-      .sidebar{order:2}
-      .main{order:1}
-      .current-wrap{flex-direction:column;align-items:flex-start}
-      .temp{text-align:left}
-    }
+  /* Responsive */
+  @media (max-width:980px){
+    .app{grid-template-columns:1fr; padding:12px}
+    .progress{width:180px}
+    .answers{grid-template-columns:1fr}
+    .results{grid-template-columns:1fr}
+  }
 
-    /* scrollbar */
-    .hourly::-webkit-scrollbar{height:8px}
-    .hourly::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.06);border-radius:10px}
-  </style>
+</style>
 </head>
 <body>
-  <div id="app">
-    <div class="container" role="application" aria-label="Open Meteo Weather App">
-      <aside class="sidebar" aria-labelledby="title">
-        <div class="brand">
-          <div class="logo" aria-hidden="true">A</div>
+  <div id="app" class="app" role="application" aria-label="QuizMaster advanced quiz app">
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Quiz controls">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">Q</div>
+        <div>
+          <h1>QuizMaster</h1>
+          <div class="lead">Advanced quiz engine — timer, lifelines, leaderboard.</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <label for="categorySelect">Category</label>
+        <select id="categorySelect" aria-label="Select category"></select>
+      </div>
+
+      <div class="section">
+        <label for="difficultySelect">Difficulty</label>
+        <select id="difficultySelect" aria-label="Select difficulty">
+          <option value="any">Any</option>
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </div>
+
+      <div class="section">
+        <label for="qcount">Number of Questions</label>
+        <input id="qcount" type="number" min="5" max="50" value="10" />
+      </div>
+
+      <div class="section">
+        <label>Options</label>
+        <div class="controls">
+          <button id="startBtn" class="btn">Start Quiz</button>
+          <button id="resetBtn" class="btn secondary small">Reset</button>
+        </div>
+        <div class="help">Use keyboard: <span class="kbd">1</span>-<span class="kbd">4</span> to pick answer, <span class="kbd">N</span> next, <span class="kbd">P</span> prev.</div>
+      </div>
+
+      <div class="section">
+        <label>Import / Create Quiz (JSON)</label>
+        <textarea id="importArea" placeholder='Paste JSON array: [{"question":"..","choices":["a","b","c","d"],"answer":0,"category":"General","difficulty":"easy"}]'></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="importBtn" class="btn small">Import</button>
+          <button id="clearImported" class="btn secondary small">Clear</button>
+        </div>
+        <div class="help">Imported quizzes are stored locally and available in Category dropdown.</div>
+      </div>
+
+      <div class="section">
+        <label>Saved Leaderboard</label>
+        <div id="leaderboardSidebar" class="card" style="padding:8px;border-radius:10px;background:rgba(255,255,255,0.02);max-height:160px;overflow:auto"></div>
+      </div>
+
+      <div class="section">
+        <label>About</label>
+        <div class="muted">This demo stores data in your browser only (localStorage). No server required.</div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main" id="mainArea">
+      <div class="topbar">
+        <div class="meta">
+          <div class="chip" id="catChip">Category: —</div>
+          <div class="chip" id="diffChip">Difficulty: —</div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="progress" aria-hidden="true"><i id="progBar" style="width:0%"></i></div>
+          <div class="timer" id="overallTimer">00:00</div>
+        </div>
+      </div>
+
+      <!-- Question card -->
+      <div class="question-card" id="questionCard" aria-live="polite">
+        <div class="q-header">
           <div>
-            <h1 id="title">Atlas • Open-Meteo</h1>
-            <p class="lead">Free weather — current, hourly (48+), and 7-day. No API key needed.</p>
+            <div class="q-sub" id="qIndex">Question —</div>
+            <div class="q-text" id="qText">Press Start to begin the quiz</div>
+          </div>
+          <div style="text-align:right">
+            <div class="muted" id="scoreDisplay">Score: 0</div>
+            <div class="muted small-muted" id="timerNote">Per-question timer: <span id="perTimer">--</span></div>
           </div>
         </div>
 
-        <div class="search" role="search">
-          <input id="searchInput" type="search" placeholder="Search city (e.g. London, Tokyo)" aria-label="City name" />
-          <button id="searchBtn" class="btn" title="Search">Search</button>
+        <div class="answers" id="answers" role="list">
+          <!-- answer buttons inserted here -->
         </div>
 
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
-          <div style="display:flex;gap:8px">
-            <button id="geoBtn" class="btn secondary small" title="Use my location">Use my location</button>
-            <button id="unitBtn" class="small" title="Toggle units">°C</button>
+        <div class="actions">
+          <div class="lifelines" id="lifelines">
+            <div class="lifeline" id="fiftyBtn" title="50-50 (removes two wrong answers)">50-50 (<span id="fiftyCount">2</span>)</div>
+            <div class="lifeline" id="skipBtn" title="Skip current question">Skip (<span id="skipCount">1</span>)</div>
           </div>
+
+          <div class="nav">
+            <button id="prevBtn" class="btn secondary small">Prev</button>
+            <button id="nextBtn" class="btn small">Next</button>
+            <button id="submitBtn" class="btn" style="display:none">Submit Quiz</button>
+          </div>
+        </div>
+
+        <div id="hintArea" class="muted small-muted" style="margin-top:6px">Tip: Use lifelines wisely.</div>
+      </div>
+
+      <!-- Results area (hidden until finished) -->
+      <div id="resultsArea" style="display:none;margin-top:14px">
+        <div class="results">
           <div>
-            <button id="saveFav" class="small" title="Save to favorites">☆ Save</button>
-          </div>
-        </div>
-
-        <div class="help">Tip: Press Enter to search. Save favorites for quick access.</div>
-
-        <div id="suggestions" class="card" style="display:none;margin-top:12px" aria-live="polite"></div>
-
-        <div class="card fav-list" style="margin-top:12px" aria-live="polite">
-          <strong>Favorites</strong>
-          <div id="favs" style="margin-top:8px"></div>
-          <div id="no-favs" class="placeholder" style="display:none">No favorites yet — save a city to reopen it later.</div>
-        </div>
-
-        <div class="card" style="margin-top:12px">
-          <strong>About</strong>
-          <div class="muted" style="margin-top:8px">
-            This app uses the Open-Meteo APIs for forecast and the Open-Meteo geocoding service. No API key required.
-          </div>
-        </div>
-      </aside>
-
-      <main class="main" id="mainPanel" aria-live="polite">
-        <div class="bg-blobs" aria-hidden="true">
-          <div class="blob a"></div>
-          <div class="blob b"></div>
-        </div>
-
-        <div id="mainContent" style="position:relative;z-index:1">
-          <div class="current-wrap">
-            <div class="current-left">
-              <div class="icon" id="weatherIcon" aria-hidden="true">—</div>
-              <div>
-                <div class="location" id="locationName">Search a city</div>
-                <div class="meta" id="timeMeta">—</div>
-                <div class="desc" id="weatherDesc">Get a quick weather snapshot</div>
+            <div class="result-card">
+              <h3 id="finalScore">You scored —</h3>
+              <div class="muted small-muted" id="scoreBreakdown">—</div>
+              <div style="margin-top:12px">
+                <button id="retakeBtn" class="btn small">Retake</button>
+                <button id="newBtn" class="btn secondary small">New Quiz</button>
+                <button id="saveScoreBtn" class="btn" style="margin-left:6px">Save Score</button>
               </div>
             </div>
 
-            <div class="controls">
-              <div style="text-align:right">
-                <div class="temp" id="temperature">—</div>
-                <div class="meta" id="feelsLike">—</div>
-              </div>
+            <div class="result-card" style="margin-top:12px">
+              <strong>Review</strong>
+              <div id="reviewList" style="margin-top:8px;max-height:320px;overflow:auto"></div>
             </div>
           </div>
 
-          <div id="loading" class="placeholder" style="display:none">Loading weather…</div>
-
-          <section id="weatherPanels" style="display:none">
-            <div class="card" id="overviewCard">
-              <div style="display:flex;justify-content:space-between;align-items:center">
-                <div>
-                  <div style="font-weight:700" id="overviewHeadline">Overview</div>
-                  <div class="muted" id="overviewSub">Hourly and 7-day forecast</div>
-                </div>
-                <div class="row">
-                  <div class="chip" id="tempRange">—</div>
-                  <div class="chip" id="humidityChip">—</div>
-                </div>
-              </div>
-
-              <div class="hourly" id="hourlyList" role="list" aria-label="Hourly forecast">
-                <!-- hourly items -->
-              </div>
+          <aside>
+            <div class="result-card">
+              <strong>Leaderboard</strong>
+              <div id="leaderboard" class="leaderboard" style="margin-top:8px"></div>
             </div>
 
-            <div class="card" id="dailyCard">
-              <strong>7-Day Forecast</strong>
-              <div class="daily-grid" id="dailyGrid" aria-label="Daily forecast">
-                <!-- daily cards -->
-              </div>
+            <div class="result-card" style="margin-top:12px">
+              <strong>Session Info</strong>
+              <div class="small-muted" style="margin-top:8px" id="sessionInfo"></div>
             </div>
-
-            <div class="card" id="detailsCard">
-              <strong>Details</strong>
-              <div class="details" id="detailsGrid">
-                <div class="detail">
-                  <strong id="windSpeed">—</strong>
-                  Wind
-                </div>
-                <div class="detail">
-                  <strong id="pressure">—</strong>
-                  Pressure
-                </div>
-                <div class="detail">
-                  <strong id="uvIndex">—</strong>
-                  UV Index
-                </div>
-              </div>
-            </div>
-
-            <div class="credits" style="margin-top:12px">Powered by Open-Meteo • Geocoding by Open-Meteo</div>
-          </section>
+          </aside>
         </div>
-      </main>
-    </div>
+      </div>
+
+    </main>
   </div>
 
-  <script>
-    /*
-      Atlas — Open-Meteo Weather App (Single-file)
-      Features:
-        - Geocoding via geocoding-api.open-meteo.com (no API key)
-        - Forecast via api.open-meteo.com (no API key)
-        - Current weather, hourly, daily
-        - Units toggle (metric/imperial) handled by API params
-        - Favorites stored in localStorage
-        - Geolocation support
-        - Graceful error handling
-    */
+<script>
+/*
+  QuizMaster — Advanced Quiz App
+  - Single file, client-side only
+  - Data stored in localStorage under keys:
+    - qm_quizzes  (imported/custom quizzes by category)
+    - qm_leaderboard (array of {name,score,category,difficulty,date})
+  - Core flow:
+    1) choose category/difficulty/count -> Start
+    2) questions selected -> per-question timer + overall timer
+    3) lifelines: 50-50 (remove two wrong), Skip (skip question)
+    4) finish -> review + save score
+*/
 
-    // ====== CONFIG / Endpoints ======
-    const GEOCODE_BASE = 'https://geocoding-api.open-meteo.com/v1/search';
-    const FORECAST_BASE = 'https://api.open-meteo.com/v1/forecast';
+/* =========================
+   App Data (sample questions)
+   ========================= */
 
-    // We'll request these hourly & daily variables:
-    const HOURLY_VARS = [
-      'temperature_2m',
-      'apparent_temperature',
-      'precipitation',
-      'weathercode',
-      'windspeed_10m',
-      'winddirection_10m',
-      'relativehumidity_2m'
-    ];
-    const DAILY_VARS = [
-      'temperature_2m_max',
-      'temperature_2m_min',
-      'apparent_temperature_max',
-      'apparent_temperature_min',
-      'precipitation_sum',
-      'weathercode'
-    ];
+const SAMPLE_QUIZZES = {
+  "General Knowledge": [
+    { question: "What is the capital of France?", choices: ["Paris","Lyon","Marseille","Nice"], answer: 0, difficulty: "easy" },
+    { question: "Which planet is known as the Red Planet?", choices: ["Venus","Saturn","Mars","Mercury"], answer: 2, difficulty: "easy" },
+    { question: "Who wrote '1984'?", choices: ["Aldous Huxley","George Orwell","Ray Bradbury","Ernest Hemingway"], answer: 1, difficulty: "medium" },
+    { question: "Which element has the chemical symbol 'Fe'?", choices: ["Fluorine","Iron","Fermium","Francium"], answer: 1, difficulty: "easy" },
+    { question: "Which country hosted the 2016 Summer Olympics?", choices: ["China","Brazil","UK","Russia"], answer: 1, difficulty: "easy" },
+    { question: "What is the hardest natural substance on Earth?", choices: ["Diamond","Gold","Quartz","Graphite"], answer: 0, difficulty: "medium" }
+  ],
+  "Science & Nature": [
+    { question: "What gas do plants absorb from the atmosphere?", choices: ["Oxygen","Nitrogen","Carbon Dioxide","Hydrogen"], answer: 2, difficulty: "easy" },
+    { question: "Which organelle is the powerhouse of the cell?", choices: ["Nucleus","Mitochondria","Ribosome","Golgi apparatus"], answer: 1, difficulty: "easy" },
+    { question: "What force keeps planets in orbit around the sun?", choices: ["Electromagnetism","Gravity","Friction","Tension"], answer: 1, difficulty: "easy" },
+    { question: "pH value less than 7 indicates?", choices: ["Neutral","Basic","Acidic","Alkaline"], answer: 2, difficulty: "easy" }
+  ],
+  "History": [
+    { question: "Who was the first President of the United States?", choices: ["John Adams","George Washington","Thomas Jefferson","James Madison"], answer: 1, difficulty: "easy" },
+    { question: "In which year did World War II end?", choices: ["1945","1942","1939","1950"], answer: 0, difficulty: "easy" },
+    { question: "The Renaissance began in which country?", choices: ["France","Spain","Italy","Germany"], answer: 2, difficulty: "medium" }
+  ]
+};
 
-    // Short helper to build query strings
-    function qs(obj){
-      return Object.keys(obj).map(k => encodeURIComponent(k) + '=' + encodeURIComponent(obj[k])).join('&');
+// Local storage keys
+const LS_QUIZZES = 'qm_quizzes';
+const LS_LEADER = 'qm_leaderboard';
+
+/* =========================
+   App State
+   ========================= */
+const STATE = {
+  pool: [],           // selected questions for current quiz
+  index: 0,
+  answers: [],        // user's selected choice index or null
+  score: 0,
+  perQuestionTime: 20, // seconds per question
+  perTimerInterval: null,
+  overallTimerInterval: null,
+  overallSeconds: 0,
+  lifelines: { fifty: 2, skip: 1 },
+  started: false,
+  category: null,
+  difficulty: null,
+  qcount: 10,
+  importedQuizzes: {}, // from localStorage
+  leaderboard: []      // from localStorage
+};
+/* =========================
+   DOM refs
+   ========================= */
+const categorySelect = document.getElementById('categorySelect');
+const difficultySelect = document.getElementById('difficultySelect');
+const qcountInput = document.getElementById('qcount');
+const startBtn = document.getElementById('startBtn');
+const resetBtn = document.getElementById('resetBtn');
+const importArea = document.getElementById('importArea');
+const importBtn = document.getElementById('importBtn');
+const clearImported = document.getElementById('clearImported');
+
+const catChip = document.getElementById('catChip');
+const diffChip = document.getElementById('diffChip');
+const progBar = document.getElementById('progBar');
+const overallTimer = document.getElementById('overallTimer');
+
+const qIndex = document.getElementById('qIndex');
+const qText = document.getElementById('qText');
+const answersEl = document.getElementById('answers');
+const scoreDisplay = document.getElementById('scoreDisplay');
+const perTimer = document.getElementById('perTimer');
+
+const fiftyBtn = document.getElementById('fiftyBtn');
+const skipBtn = document.getElementById('skipBtn');
+const fiftyCount = document.getElementById('fiftyCount');
+const skipCount = document.getElementById('skipCount');
+
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const submitBtn = document.getElementById('submitBtn');
+
+const resultsArea = document.getElementById('resultsArea');
+const finalScore = document.getElementById('finalScore');
+const scoreBreakdown = document.getElementById('scoreBreakdown');
+const reviewList = document.getElementById('reviewList');
+const leaderboardEl = document.getElementById('leaderboard');
+const leaderboardSidebar = document.getElementById('leaderboardSidebar');
+const saveScoreBtn = document.getElementById('saveScoreBtn');
+const retakeBtn = document.getElementById('retakeBtn');
+const newBtn = document.getElementById('newBtn');
+const sessionInfo = document.getElementById('sessionInfo');
+
+/* =========================
+   Initialization
+   ========================= */
+function initApp(){
+  // load imported quizzes & leaderboard from localStorage
+  try{
+    const raw = localStorage.getItem(LS_QUIZZES);
+    STATE.importedQuizzes = raw ? JSON.parse(raw) : {};
+  }catch(e){ STATE.importedQuizzes = {}; }
+
+  try{
+    const rawL = localStorage.getItem(LS_LEADER);
+    STATE.leaderboard = rawL ? JSON.parse(rawL) : [];
+  }catch(e){ STATE.leaderboard = []; }
+
+  // Build category list from sample + imported
+  rebuildCategoryList();
+
+  // wire events
+  attachEvents();
+
+  // UI initial states
+  updateLifelineUI();
+  refreshLeaderboardUI();
+}
+initApp();
+
+/* =========================
+   Build category select
+   ========================= */
+function rebuildCategoryList(){
+  // categories: combine SAMPLE_QUIZZES keys and imported names
+  const categories = new Set(Object.keys(SAMPLE_QUIZZES));
+  for(const k in STATE.importedQuizzes) categories.add(k);
+  // clear and populate
+  categorySelect.innerHTML = '';
+  const anyOpt = document.createElement('option');
+  anyOpt.value = 'any';
+  anyOpt.textContent = 'Any Category';
+  categorySelect.appendChild(anyOpt);
+  categories.forEach(cat=>{
+    const opt = document.createElement('option');
+    opt.value = cat;
+    opt.textContent = cat;
+    categorySelect.appendChild(opt);
+  });
+}
+
+/* =========================
+   Event wiring
+   ========================= */
+function attachEvents(){
+  startBtn.addEventListener('click', startQuiz);
+  resetBtn.addEventListener('click', resetApp);
+  importBtn.addEventListener('click', importQuizzes);
+  clearImported.addEventListener('click', clearImportedQuizzes);
+  prevBtn.addEventListener('click', prevQuestion);
+  nextBtn.addEventListener('click', nextQuestion);
+  fiftyBtn.addEventListener('click', useFifty);
+  skipBtn.addEventListener('click', useSkip);
+  submitBtn.addEventListener('click', finishQuiz);
+  saveScoreBtn.addEventListener('click', saveScore);
+  retakeBtn.addEventListener('click', retakeQuiz);
+  newBtn.addEventListener('click', startNewQuiz);
+
+  // keyboard shortcuts for answers & nav
+  document.addEventListener('keydown', (e)=>{
+    if(!STATE.started) return;
+    if(['1','2','3','4'].includes(e.key)){
+      const idx = Number(e.key) - 1;
+      selectAnswer(idx);
+    } else if(e.key.toLowerCase() === 'n'){
+      nextQuestion();
+    } else if(e.key.toLowerCase() === 'p'){
+      prevQuestion();
+    } else if(e.key === ' '){
+      e.preventDefault();
+      // space to toggle pause? (not implemented) — we could use it for next
+      nextQuestion();
     }
+  });
+}
 
-    // ====== DOM nodes ======
-    const searchInput = document.getElementById('searchInput');
-    const searchBtn = document.getElementById('searchBtn');
-    const geoBtn = document.getElementById('geoBtn');
-    const unitBtn = document.getElementById('unitBtn');
-    const saveFavBtn = document.getElementById('saveFav');
-    const favsContainer = document.getElementById('favs');
-    const noFavs = document.getElementById('no-favs');
-    const suggestionsBox = document.getElementById('suggestions');
+/* =========================
+   Core: Start Quiz
+   ========================= */
+function startQuiz(){
+  // read options
+  const cat = categorySelect.value;
+  const diff = difficultySelect.value;
+  const qcount = parseInt(qcountInput.value) || 10;
 
-    const loadingEl = document.getElementById('loading');
-    const mainPanels = document.getElementById('weatherPanels');
-    const weatherIcon = document.getElementById('weatherIcon');
-    const locationName = document.getElementById('locationName');
-    const timeMeta = document.getElementById('timeMeta');
-    const weatherDesc = document.getElementById('weatherDesc');
-    const temperatureEl = document.getElementById('temperature');
-    const feelsLikeEl = document.getElementById('feelsLike');
+  STATE.category = cat === 'any' ? null : cat;
+  STATE.difficulty = diff === 'any' ? null : diff;
+  STATE.qcount = Math.min(Math.max(qcount, 5), 50);
 
-    const hourlyList = document.getElementById('hourlyList');
-    const dailyGrid = document.getElementById('dailyGrid');
-    const tempRange = document.getElementById('tempRange');
-    const humidityChip = document.getElementById('humidityChip');
+  // build question pool
+  let pool = [];
 
-    const windSpeed = document.getElementById('windSpeed');
-    const pressure = document.getElementById('pressure');
-    const uvIndex = document.getElementById('uvIndex');
+  // gather from sample
+  for(const k in SAMPLE_QUIZZES){
+    // category filtering
+    if(STATE.category && k !== STATE.category) continue;
+    SAMPLE_QUIZZES[k].forEach(q=>{
+      if(STATE.difficulty && q.difficulty !== STATE.difficulty) return;
+      pool.push({...q, category: k});
+    });
+  }
 
-    // ====== App state ======
-    const STATE = {
-      units: localStorage.getItem('atlas_units') || 'metric', // 'metric' or 'imperial'
-      favorites: JSON.parse(localStorage.getItem('atlas_favs') || '[]'),
-      last: null, // last loaded forecast object
-      debounce: null,
-      searchCache: {} // cache geocoding responses
-    };
+  // gather from imported quizzes
+  for(const k in STATE.importedQuizzes){
+    if(STATE.category && k !== STATE.category) continue;
+    const arr = STATE.importedQuizzes[k] || [];
+    arr.forEach(q=>{
+      if(STATE.difficulty && q.difficulty !== STATE.difficulty) return;
+      pool.push({...q, category: k});
+    });
+  }
+  if(pool.length === 0){
+    alert('No questions match your selection. Try different category/difficulty or import questions.');
+    return;
+  }
 
-    // Initialize UI
-    (function init(){
-      renderUnits();
-      loadFavorites();
-      attachEvents();
-      // If have favorites, load first one to show something
-      if(STATE.favorites.length > 0){
-        fetchWeatherForCity(STATE.favorites[0].name, STATE.favorites[0].country).catch(()=>{});
-      }
-    })();
+  // shuffle pool and pick qcount
+  pool = shuffleArray(pool);
+  pool = pool.slice(0, STATE.qcount);
 
-    // ====== Event wiring ======
-    function attachEvents(){
-      searchBtn.addEventListener('click', onSearchClick);
-      searchInput.addEventListener('keydown', e => {
-        if(e.key === 'Enter') onSearchClick();
-        // live suggestions (debounced)
-        if(e.key.length === 1 || e.key === 'Backspace' || e.key === 'Delete') {
-          debouncedSuggestions(searchInput.value.trim());
-        }
-      });
-      geoBtn.addEventListener('click', tryGeo);
-      unitBtn.addEventListener('click', toggleUnits);
-      saveFavBtn.addEventListener('click', saveCurrentToFavs);
+  // init state
+  STATE.pool = pool;
+  STATE.index = 0;
+  STATE.answers = new Array(pool.length).fill(null);
+  STATE.score = 0;
+  STATE.perQuestionTime = 20; // could make configurable
+  STATE.lifelines = { fifty: 2, skip: 1 };
+  STATE.started = true;
+  STATE.overallSeconds = 0;
 
-      favsContainer.addEventListener('click', e=>{
-        const t = e.target.closest('.fav-item');
-        if(!t) return;
-        const city = t.dataset.city;
-        const country = t.dataset.country || '';
-        fetchWeatherForCity(city, country).catch(()=>{});
-      });
+  // UI update
+  catChip.textContent = `Category: ${STATE.category || 'Any'}`;
+  diffChip.textContent = `Difficulty: ${STATE.difficulty || 'Any'}`;
+  scoreDisplay.textContent = `Score: ${STATE.score}`;
+  fiftyCount.textContent = STATE.lifelines.fifty;
+  skipCount.textContent = STATE.lifelines.skip;
+  updateLifelineUI();
+  renderQuestion();
+  startTimers();
+  document.getElementById('resultsArea').style.display = 'none';
+  document.getElementById('questionCard').scrollIntoView({behavior:'smooth'});
+}
 
-      favsContainer.addEventListener('click', e=>{
-        if(e.target.classList.contains('remove-fav')){
-          e.stopPropagation();
-          const parent = e.target.closest('.fav-item');
-          if(!parent) return;
-          const name = parent.dataset.city;
-          removeFromFavs(name);
-        }
-      });
-
-      suggestionsBox.addEventListener('click', e=>{
-        const item = e.target.closest('.s-item');
-        if(!item) return;
-        const city = item.dataset.city;
-        const country = item.dataset.country || '';
-        searchInput.value = city + (country ? ', ' + country : '');
-        suggestionsBox.style.display = 'none';
-        fetchWeatherForCity(city, country).catch(()=>{});
-      });
-
-      document.addEventListener('click', e=>{
-        if(!e.target.closest('#searchInput') && !e.target.closest('#suggestions')){
-          suggestionsBox.style.display = 'none';
-        }
-      });
+/* =========================
+   Timers
+   ========================= */
+function startTimers(){
+  stopTimers();
+  // per-question timer
+  let remaining = STATE.perQuestionTime;
+  perTimer.textContent = formatTime(remaining);
+  STATE.perTimerInterval = setInterval(()=>{
+    remaining--;
+    perTimer.textContent = formatTime(remaining);
+    if(remaining <= 0){
+      clearInterval(STATE.perTimerInterval);
+      // auto move next and mark unanswered as null
+      // no penalty except missing opportunity
+      autoAdvanceAfterTimeout();
     }
+  }, 1000);
 
-    // ====== Units handling ======
-    function toggleUnits(){
-      STATE.units = STATE.units === 'metric' ? 'imperial' : 'metric';
-      localStorage.setItem('atlas_units', STATE.units);
-      renderUnits();
-      if(STATE.last && STATE.last.coords){
-        // re-fetch with new units
-        fetchWeatherByCoords(STATE.last.coords.lat, STATE.last.coords.lon, STATE.last.name, STATE.last.country).catch(()=>{});
-      }
+  // overall timer
+  STATE.overallTimerInterval = setInterval(()=>{
+    STATE.overallSeconds++;
+    overallTimer.textContent = formatTime(STATE.overallSeconds);
+  }, 1000);
+}
+
+function stopTimers(){
+  if(STATE.perTimerInterval) { clearInterval(STATE.perTimerInterval); STATE.perTimerInterval = null; }
+  if(STATE.overallTimerInterval){ clearInterval(STATE.overallTimerInterval); STATE.overallTimerInterval = null; }
+}
+
+function restartPerTimer(){
+  if(STATE.perTimerInterval) clearInterval(STATE.perTimerInterval);
+  let remaining = STATE.perQuestionTime;
+  perTimer.textContent = formatTime(remaining);
+  STATE.perTimerInterval = setInterval(()=>{
+    remaining--;
+    perTimer.textContent = formatTime(remaining);
+    if(remaining <= 0){
+      clearInterval(STATE.perTimerInterval);
+      autoAdvanceAfterTimeout();
     }
-    function renderUnits(){
-      unitBtn.textContent = STATE.units === 'metric' ? '°C' : '°F';
+  }, 1000);
+}
+
+/* on timeout: treat unanswered then move next */
+function autoAdvanceAfterTimeout(){
+  // leave answer as null, move next
+  nextQuestion();
+}
+
+/* =========================
+   Render question & answers
+   ========================= */
+function renderQuestion(){
+  const i = STATE.index;
+  const qObj = STATE.pool[i];
+  qIndex.textContent = `Question ${i+1} of ${STATE.pool.length}`;
+  qText.textContent = qObj.question;
+  scoreDisplay.textContent = `Score: ${STATE.score}`;
+
+  // progress
+  const pct = Math.round(((i) / STATE.pool.length) * 100);
+  progBar.style.width = pct + '%';
+
+  // render answers
+  answersEl.innerHTML = '';
+  qObj.choices.forEach((ch, idx)=>{
+    const a = document.createElement('button');
+    a.className = 'answer';
+    a.setAttribute('role','button');
+    a.dataset.index = idx;
+    a.tabIndex = 0;
+    a.innerHTML = `<span style="font-weight:700">${String.fromCharCode(65+idx)}</span><div style="flex:1;text-align:left">${escapeHtml(ch)}</div>`;
+    // mark if previously selected
+    if(STATE.answers[i] === idx) a.classList.add('selected');
+    a.addEventListener('click', ()=> selectAnswer(idx));
+    answersEl.appendChild(a);
+  });
+
+  // hide submit btn until last question
+  submitBtn.style.display = (i === STATE.pool.length - 1) ? 'inline-flex' : 'none';
+
+  // reset per-question timer
+  restartPerTimer();
+
+  // expose hint for keyboard
+  document.getElementById('hintArea').textContent = 'Use keys 1-4 to pick an answer.';
+
+  // clear any 50-50 marks (we'll manage removed choices)
+  // focus first answer for accessibility
+  const firstBtn = answersEl.querySelector('.answer');
+  if(firstBtn) firstBtn.focus();
+}
+
+/* =========================
+   Select answer
+   ========================= */
+function selectAnswer(choiceIdx){
+  if(!STATE.started) return;
+  const i = STATE.index;
+  const qObj = STATE.pool[i];
+  // if already answered and we want to allow change? allow change before moving on
+  STATE.answers[i] = choiceIdx;
+
+  // mark UI selected and show immediate correctness (optionally)
+  // We'll reveal correctness only when user hits Next or at finish. But highlight selection.
+  Array.from(answersEl.children).forEach(btn=>{
+    btn.classList.remove('selected');
+  });
+  const btn = answersEl.querySelector(`button.answer[data-index="${choiceIdx}"]`);
+  if(btn) btn.classList.add('selected');
+
+  // small UX: auto move next after 700ms so user sees selection
+  setTimeout(()=> {
+    // update score incrementally
+    // we won't finalize correctness until finish, but we can give instant feedback:
+    const correct = qObj.answer === choiceIdx;
+    if(correct){
+      // give small score reward
+      STATE.score += 1;
     }
-
-    // ====== Favorites ======
-    function loadFavorites(){
-      const favs = STATE.favorites || [];
-      favsContainer.innerHTML = '';
-      if(favs.length === 0){
-        noFavs.style.display = 'block';
-        return;
-      }
-      noFavs.style.display = 'none';
-      favs.forEach(f=>{
-        const item = document.createElement('div');
-        item.className = 'fav-item';
-        item.dataset.city = f.name;
-        item.dataset.country = f.country || '';
-        item.innerHTML = `
-          <div>
-            <div class="fav-city">${escapeHtml(f.name)}</div>
-            <div class="fav-meta">${escapeHtml(f.country || '')}</div>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <button class="remove-fav" aria-label="Remove favorite">✕</button>
-          </div>
-        `;
-        favsContainer.appendChild(item);
-      });
+    // move next if not last question
+    if(STATE.index < STATE.pool.length - 1){
+      nextQuestion();
+    } else {
+      // if last question, show submit button
+      submitBtn.style.display = 'inline-flex';
     }
-    function saveCurrentToFavs(){
-      if(!STATE.last || !STATE.last.name) return alert('No city loaded to save.');
-      const exists = STATE.favorites.find(f => f.name.toLowerCase() === STATE.last.name.toLowerCase());
-      if(exists) return alert('Already in favorites.');
-      const entry = { name: STATE.last.name, country: STATE.last.country || '' };
-      STATE.favorites.unshift(entry);
-      localStorage.setItem('atlas_favs', JSON.stringify(STATE.favorites));
-      loadFavorites();
-      alert('Saved to favorites.');
+    // update score display
+    scoreDisplay.textContent = `Score: ${STATE.score}`;
+  }, 600);
+}
+
+/* =========================
+   Navigation
+   ========================= */
+function nextQuestion(){
+  if(!STATE.started) return;
+  // stop any per timer and reset for next
+  // allow moving even if at end -> finish
+  if(STATE.index < STATE.pool.length - 1){
+    STATE.index++;
+    // restart per-question timer
+    renderQuestion();
+  } else {
+    // last -> finish
+    finishQuiz();
+  }
+}
+
+function prevQuestion(){
+  if(!STATE.started) return;
+  if(STATE.index > 0){
+    STATE.index--;
+    renderQuestion();
+  }
+}
+
+/* =========================
+   Lifelines
+   ========================= */
+function updateLifelineUI(){
+  fiftyCount.textContent = STATE.lifelines.fifty;
+  skipCount.textContent = STATE.lifelines.skip;
+  fiftyBtn.classList.toggle('disabled', STATE.lifelines.fifty <= 0);
+  skipBtn.classList.toggle('disabled', STATE.lifelines.skip <= 0);
+}
+
+function useFifty(){
+  if(!STATE.started) return;
+  if(STATE.lifelines.fifty <= 0) return alert('No 50-50 lifelines left.');
+  // remove two wrong choices from current question (hide buttons)
+  const i = STATE.index;
+  const q = STATE.pool[i];
+  if(q.choices.length <= 2) return alert('Not enough choices to remove.');
+  // compute wrong indices
+  const wrongs = q.choices.map((_, idx) => idx).filter(idx => idx !== q.answer);
+  shuffleArray(wrongs);
+  const toRemove = wrongs.slice(0, Math.max(1, wrongs.length - 1)); // remove until 2 remain (1 correct + 1 wrong)
+  // hide these buttons
+  toRemove.forEach(idx=>{
+    const btn = answersEl.querySelector(`button.answer[data-index="${idx}"]`);
+    if(btn){ btn.style.visibility = 'hidden'; btn.disabled = true; }
+  });
+  STATE.lifelines.fifty--;
+  updateLifelineUI();
+}
+
+function useSkip(){
+  if(!STATE.started) return;
+  if(STATE.lifelines.skip <= 0) return alert('No skip lifelines left.');
+  // Mark current as skipped (store as null but move on)
+  STATE.answers[STATE.index] = null; // explicit skip
+  STATE.lifelines.skip--;
+  updateLifelineUI();
+  nextQuestion();
+}
+
+/* =========================
+   Finish & Review
+   ========================= */
+function finishQuiz(){
+  if(!STATE.started) return;
+  stopTimers();
+  STATE.started = false;
+
+  // compute final score accurately (in case instant scoring gave same)
+  let correctCount = 0;
+  for(let i=0;i<STATE.pool.length;i++){
+    const q = STATE.pool[i];
+    if(STATE.answers[i] === q.answer) correctCount++;
+  }
+  STATE.score = correctCount;
+
+  // show results area
+  document.getElementById('resultsArea').style.display = 'block';
+  finalScore.textContent = `You scored ${STATE.score} / ${STATE.pool.length}`;
+  scoreBreakdown.textContent = `Correct: ${STATE.score} • Questions: ${STATE.pool.length} • Time: ${formatTime(STATE.overallSeconds)}`;
+
+  // review list
+  reviewList.innerHTML = '';
+  STATE.pool.forEach((q, idx)=>{
+    const user = STATE.answers[idx];
+    const row = document.createElement('div');
+    row.style.padding = '8px';
+    row.style.borderBottom = '1px dashed rgba(255,255,255,0.03)';
+    row.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="max-width:70%">
+          <div style="font-weight:700">${escapeHtml(q.question)}</div>
+          <div class="muted small-muted">${escapeHtml(q.choices.map((c,i)=> `${String.fromCharCode(65+i)}. ${c}`).join(' | '))}</div>
+        </div>
+        <div style="text-align:right">
+          <div>${user === q.answer ? '<span style="color:var(--success)">Correct</span>' : `<span style="color:var(--danger)">Wrong</span>`}</div>
+          <div class="muted" style="font-size:12px">Answer: ${String.fromCharCode(65+q.answer)}</div>
+        </div>
+      </div>
+    `;
+    reviewList.appendChild(row);
+  });
+
+  // show leaderboard and session info
+  refreshLeaderboardUI();
+  sessionInfo.innerHTML = `
+    Category: ${STATE.category || 'Any'}<br/>
+    Difficulty: ${STATE.difficulty || 'Any'}<br/>
+    Questions: ${STATE.pool.length}<br/>
+    Time: ${formatTime(STATE.overallSeconds)}
+  `;
+
+  // scroll to results
+  document.getElementById('resultsArea').scrollIntoView({behavior:'smooth'});
+}
+
+/* =========================
+   Leaderboard (local)
+   ========================= */
+function saveScore(){
+  const name = prompt('Enter name for leaderboard (max 20 chars):','Player');
+  if(!name) return;
+  const entry = {
+    name: name.slice(0,20),
+    score: STATE.score,
+    total: STATE.pool.length,
+    category: STATE.category || 'Any',
+    difficulty: STATE.difficulty || 'Any',
+    date: new Date().toISOString()
+  };
+  STATE.leaderboard.push(entry);
+  // sort by score desc then time asc (shorter time better)
+  STATE.leaderboard.sort((a,b) => {
+    if(b.score !== a.score) return b.score - a.score;
+    return (new Date(a.date) - new Date(b.date));
+  });
+  // keep top 50
+  STATE.leaderboard = STATE.leaderboard.slice(0,50);
+  localStorage.setItem(LS_LEADER, JSON.stringify(STATE.leaderboard));
+  refreshLeaderboardUI();
+  alert('Saved to leaderboard!');
+}
+function refreshLeaderboardUI(){
+  leaderboardEl.innerHTML = '';
+  leaderboardSidebar.innerHTML = '';
+  const list = STATE.leaderboard || [];
+  if(list.length === 0){
+    leaderboardEl.innerHTML = '<div class="muted small-muted">No scores yet.</div>';
+    leaderboardSidebar.innerHTML = '<div class="muted small-muted">No scores yet.</div>';
+    return;
+  }
+  list.slice(0,10).forEach((entry, idx)=>{
+    const row = document.createElement('div');
+    row.className = 'leader-row';
+    row.innerHTML = `<div>${idx+1}. <strong>${escapeHtml(entry.name)}</strong></div><div>${entry.score}/${entry.total}</div>`;
+    leaderboardEl.appendChild(row);
+  });
+  // sidebar compact
+  STATE.leaderboard.slice(0,6).forEach((e, i)=>{
+    const r = document.createElement('div');
+    r.style.padding = '6px 0';
+    r.innerHTML = `${i+1}. <strong>${escapeHtml(e.name)}</strong> <span class="muted">(${e.score}/${e.total})</span>`;
+    leaderboardSidebar.appendChild(r);
+  });
+}
+
+/* =========================
+   Retake / New
+   ========================= */
+function retakeQuiz(){
+  // reset scores and timers but use same pool
+  STATE.index = 0;
+  STATE.answers = new Array(STATE.pool.length).fill(null);
+  STATE.score = 0;
+  STATE.started = true;
+  STATE.overallSeconds = 0;
+  updateLifelineUI();
+  renderQuestion();
+  startTimers();
+  document.getElementById('resultsArea').style.display = 'none';
+}
+
+function startNewQuiz(){
+  // go back to UI for selections
+  document.getElementById('resultsArea').style.display = 'none';
+  STATE.started = false;
+  stopTimers();
+  // clear state
+  STATE.pool = [];
+  STATE.answers = [];
+  STATE.score = 0;
+  STATE.index = 0;
+  progBar.style.width = '0%';
+  overallTimer.textContent = '00:00';
+  perTimer.textContent = '--';
+  document.getElementById('questionCard').querySelector('#qText').textContent = 'Press Start to begin the quiz';
+}
+
+/* =========================
+   Import / Clear imported quizzes
+   ========================= */
+function importQuizzes(){
+  const raw = importArea.value.trim();
+  if(!raw) return alert('Paste JSON array into the textarea first.');
+  let arr;
+  try{
+    arr = JSON.parse(raw);
+    if(!Array.isArray(arr)) throw new Error('JSON must be an array');
+  } catch(e){
+    return alert('Invalid JSON: ' + (e.message || e));
+  }
+  // require each item to have question, choices, answer
+  for(const item of arr){
+    if(!item.question || !Array.isArray(item.choices) || typeof item.answer !== 'number'){
+      return alert('Each item must include "question" (string), "choices" (array), "answer" (index number).');
     }
-    function removeFromFavs(name){
-      STATE.favorites = STATE.favorites.filter(f => f.name.toLowerCase() !== name.toLowerCase());
-      localStorage.setItem('atlas_favs', JSON.stringify(STATE.favorites));
-      loadFavorites();
-    }
-   // ====== Suggestions (very light) ======
-    function debouncedSuggestions(q){
-      clearTimeout(STATE.debounce);
-      if(!q){ suggestionsBox.style.display = 'none'; return; }
-      STATE.debounce = setTimeout(()=>showSuggestions(q), 350);
-    }
-    function showSuggestions(q){
-      const res = [];
-      // local favorites
-      STATE.favorites.forEach(f=>{
-        if(f.name.toLowerCase().includes(q.toLowerCase())) res.push({city:f.name, country:f.country || ''});
-      });
-      // cached searches
-      for(const k in STATE.searchCache){
-        if(k.toLowerCase().includes(q.toLowerCase())){
-          const c = STATE.searchCache[k];
-          res.push({city:k, country:c.country || ''});
-        }
-      }
-      if(res.length === 0){
-        suggestionsBox.innerHTML = `<div class="s-item" data-city="${escapeHtml(q)}" data-country="">Search "${escapeHtml(q)}"</div>`;
-      } else {
-        suggestionsBox.innerHTML = res.map(r=>`<div class="s-item" data-city="${escapeHtml(r.city)}" data-country="${escapeHtml(r.country)}">${escapeHtml(r.city)} <span class="muted">${r.country||''}</span></div>`).join('');
-      }
-      suggestionsBox.style.display = 'block';
-    }
+  }
+  // ask for category name
+  const cat = prompt('Enter category name for imported questions (e.g., "User Imports")','Imported') || 'Imported';
+  if(!STATE.importedQuizzes[cat]) STATE.importedQuizzes[cat] = [];
+  // normalize and push
+  arr.forEach(i=>{
+    STATE.importedQuizzes[cat].push({
+      question: i.question,
+      choices: i.choices,
+      answer: i.answer,
+      difficulty: i.difficulty || 'any'
+    });
+  });
+  // save
+  localStorage.setItem(LS_QUIZZES, JSON.stringify(STATE.importedQuizzes));
+  importArea.value = '';
+  rebuildCategoryList();
+  alert(`Imported ${arr.length} questions into category "${cat}".`);
+}
 
-    // ====== Search flow: city -> geocode -> forecast ======
-    async function onSearchClick(){
-      const q = searchInput.value.trim();
-      if(!q) return alert('Please enter a city or location.');
-      const parts = q.split(',').map(p=>p.trim()).filter(Boolean);
-      const city = parts[0];
-      const country = parts[1] || '';
-      await fetchWeatherForCity(city, country);
-    }
+function clearImportedQuizzes(){
+  if(!confirm('Clear all imported quizzes from local storage?')) return;
+  STATE.importedQuizzes = {};
+  localStorage.removeItem(LS_QUIZZES);
+  rebuildCategoryList();
+  alert('Imported quizzes cleared.');
+}
 
-    async function fetchWeatherForCity(city, country=''){
-      showLoading();
-      try{
-        const cacheKey = (city + (country ? ','+country : '')).toLowerCase();
-        let entry;
-        if(STATE.searchCache[cacheKey]){
-          entry = STATE.searchCache[cacheKey];
-        } else {
-          // call geocoding
-          const geourl = `${GEOCODE_BASE}?${qs({name: city, count: 5, language: 'en', format: 'json'})}`;
-          const r = await fetch(geourl);
-          if(!r.ok) throw new Error('Geocoding failed');
-          const data = await r.json();
-          if(!data.results || data.results.length === 0){
-            throw new Error('No results for that city.');
-          }
-          // prefer exact match including country if provided, else first result
-          let chosen = data.results[0];
-          if(country){
-            const match = data.results.find(x => (x.country && x.country.toLowerCase() === country.toLowerCase()) || (x.country_code && x.country_code.toLowerCase() === country.toLowerCase()));
-            if(match) chosen = match;
-          }
-          entry = {
-            name: chosen.name,
-            country: chosen.country || chosen.country_code || '',
-            lat: chosen.latitude,
-            lon: chosen.longitude,
-            timezone: chosen.timezone || 'auto'
-          };
-          STATE.searchCache[cacheKey] = entry;
-        }
-        await fetchWeatherByCoords(entry.lat, entry.lon, entry.name, entry.country, entry.timezone);
-      } catch(err){
-        console.error(err);
-        alert('Error: ' + (err.message || err));
-        hideLoading();
-      }
-    }
+/* =========================
+   Reset App
+   ========================= */
+function resetApp(){
+  if(!confirm('Reset app state? This will clear imported quizzes & leaderboard.')) return;
+  localStorage.removeItem(LS_QUIZZES);
+  localStorage.removeItem(LS_LEADER);
+  STATE.importedQuizzes = {};
+  STATE.leaderboard = [];
+  rebuildCategoryList();
+  refreshLeaderboardUI();
+  alert('App reset.');
+}
 
-    async function tryGeo(){
-      if(!navigator.geolocation){
-        alert('Geolocation not supported in this browser.');
-        return;
-      }
-      showLoading();
-      navigator.geolocation.getCurrentPosition(async pos=>{
-        const lat = pos.coords.latitude;
-        const lon = pos.coords.longitude;
-        // attempt reverse lookup to get place name
-        try{
-          // Open-Meteo's geocoding also supports lat/lon lookup using nearby parameter via search? We'll call the geocoding endpoint with 'name' fallback by nearby search through reverse style (use their 'reverse' capability if available).
-          // Simpler: call geocoding with a small name search using latitude & longitude by selecting first nearby by distance: the geocoding API supports 'count' and searching by ?we will call 'geocoding-api.open-meteo.com/v1/reverse?latitude=..&longitude=..'
-          const reverseUrl = `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${lat}&longitude=${lon}&count=1&language=en`;
-          const r = await fetch(reverseUrl);
-          let name='Your Location', country='';
-          if(r.ok){
-            const j = await r.json();
-            if(j.results && j.results.length>0){
-              name = j.results[0].name || name;
-              country = j.results[0].country || j.results[0].country_code || country;
-            }
-          }
-          await fetchWeatherByCoords(lat, lon, name, country);
-        } catch(err){
-          console.error(err);
-          alert('Failed to get location name, still fetching coordinates.');
-          await fetchWeatherByCoords(lat, lon, 'Your Location', '');
-        }
-      }, err=>{
-        hideLoading();
-        alert('Geolocation error: ' + err.message);
-      }, { enableHighAccuracy: true, timeout: 10000 });
-    }
+/* =========================
+   Utility functions
+   ========================= */
+function shuffleArray(a){
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
-    // ====== Fetch forecast by coords ======
-    async function fetchWeatherByCoords(lat, lon, name='Unknown', country='', timezone='auto'){
-      showLoading();
-      try{
-        const units = STATE.units; // 'metric' or 'imperial'
-        // open-meteo query params:
-        // - hourly: list of variables
-        // - daily: list
-        // - current_weather=true gives current temperature + wind + weathercode
-        // - temperature_unit and windspeed_unit depend on units
-        const params = {
-          latitude: lat,
-          longitude: lon,
-          timezone: timezone || 'auto',
-          hourly: HOURLY_VARS.join(','),
-          daily: DAILY_VARS.join(','),
-          current_weather: true,
-          past_days: 0
-        };
-        // units mapping (Open-Meteo supports temperature_unit and windspeed_unit)
-        if(units === 'imperial'){
-          params.temperature_unit = 'fahrenheit';
-          params.windspeed_unit = 'mph';
-          // precipitation and pressure units are standard (mm, hPa), we will format where needed
-        } else {
-          params.temperature_unit = 'celsius';
-          params.windspeed_unit = 'ms';
-        }
+function formatTime(sec){
+  if(sec < 0) sec = 0;
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
 
-        const url = `${FORECAST_BASE}?${qs(params)}`;
-        const r = await fetch(url);
-        if(!r.ok) throw new Error('Forecast request failed');
-        const data = await r.json();
+function escapeHtml(s){
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
 
-        // Build a normalized state object
-        const state = {
-          name,
-          country,
-          coords: { lat, lon },
-          timezone: data.timezone || timezone,
-          units,
-          fetchedAt: Date.now(),
-          data
-        };
-        STATE.last = state;
-        // store in searchCache for suggestions
-        const cacheKey = (name + (country ? ','+country : '')).toLowerCase();
-        STATE.searchCache[cacheKey] = { coords: { lat, lon }, country };
+/* =========================
+   Misc utilities for pressure-free demo
+   ========================= */
+/* We reveal correct/wrong when reviewing; also allow clearing leaderboard via console if needed */
+window.QM = {
+  STATE,
+  SAMPLE_QUIZZES,
+  LS_QUIZZES,
+  LS_LEADER
+};
 
-        renderWeather(state);
-      } catch(err){
-        console.error(err);
-        alert('Failed to fetch weather: ' + (err.message || err));
-      } finally{
-        hideLoading();
-      }
-    }
+/* =========================
+   Small polish: update lifeline UI on load
+   ========================= */
+updateLifelineUI();
 
-    // ====== Render functions ======
-    function showLoading(){
-      loadingEl.style.display = 'block';
-      mainPanels.style.display = 'none';
-    }
-    function hideLoading(){
-      loadingEl.style.display = 'none';
-    }
-
-    function renderWeather(state){
-      if(!state || !state.data) return;
-      mainPanels.style.display = 'block';
-      const data = state.data;
-      const cur = data.current_weather || {};
-      // display location
-      locationName.textContent = `${state.name}${state.country ? ', ' + state.country : ''}`;
-      // time: use current weather time if available
-      if(cur.time){
-        const when = new Date(cur.time + (':00')); // cur.time is ISO-like "2023-09-01T12:34"
-        // ensure valid date
-        const d = new Date(cur.time);
-        timeMeta.textContent = isNaN(d.getTime()) ? (new Date()).toLocaleString() : d.toLocaleString();
-      } else {
-        timeMeta.textContent = new Date().toLocaleString();
-      }
-
-      // Weather description from weathercode (Open-Meteo provides weathercode int)
-      const wcode = cur.weathercode ?? (data.hourly?.weathercode?.[0]);
-      const wdesc = weatherCodeToText(wcode);
-      weatherDesc.textContent = capitalize(wdesc);
-
-      // Icon / simple svg symbol depending on code
-      weatherIcon.innerHTML = iconForWeatherCode(wcode);
-
-      // Temps
-      const tempUnit = state.units === 'metric' ? '°C' : '°F';
-      const curTemp = cur.temperature ?? data.hourly?.temperature_2m?.[0];
-      const feels = inferFeelsLike(state, cur);
-      temperatureEl.textContent = curTemp != null ? `${Math.round(curTemp)}${tempUnit}` : '—';
-      feelsLikeEl.textContent = feels != null ? `Feels like ${Math.round(feels)}${tempUnit}` : '';
-
-      // Overview chips: high/low over next 7 days
-      if(data.daily && data.daily.time){
-        const highs = data.daily.temperature_2m_max || [];
-        const lows = data.daily.temperature_2m_min || [];
-        const hi = highs.length ? Math.round(Math.max(...highs)) : '—';
-        const lo = lows.length ? Math.round(Math.min(...lows)) : '—';
-        tempRange.textContent = `H ${hi}${tempUnit} • L ${lo}${tempUnit}`;
-      } else {
-        tempRange.textContent = '—';
-      }
-
-      // humidity chip (take from hourly nearest)
-      const hum = nearestHourlyValue(data.hourly, 'relativehumidity_2m', cur.time);
-      humidityChip.textContent = hum != null ? `Humidity ${Math.round(hum)}%` : 'Humidity —';
-
-      // Hourly: show next 48 hours (if available)
-      hourlyList.innerHTML = '';
-      if(data.hourly && data.hourly.time){
-        // find starting index aligned with current time
-        const times = data.hourly.time;
-        const t0 = cur.time || times[0];
-        const startIdx = Math.max(0, times.findIndex(t => t === t0));
-        const slice = times.slice(startIdx, startIdx + 48);
-        slice.forEach((t, idx)=>{
-          const absIdx = startIdx + idx;
-          const temp = data.hourly.temperature_2m?.[absIdx];
-          const hcode = data.hourly.weathercode?.[absIdx];
-          const precip = data.hourly.precipitation?.[absIdx] ?? 0;
-          const hourText = toLocalHour(t, state.timezone);
-          const el = document.createElement('div');
-          el.className = 'hour';
-          el.innerHTML = `
-            <div class="muted">${hourText}</div>
-            <div style="margin-top:6px">${smallIconSVG(hcode)}</div>
-            <strong>${temp != null ? Math.round(temp)+tempUnit : '—'}</strong>
-            <div class="muted" style="font-size:12px;margin-top:6px">${precip ? (precip + (state.units==='metric' ? ' mm' : ' mm')) : ''}</div>
-          `;
-hourlyList.appendChild(el);
-        });
-      } else {
-        hourlyList.innerHTML = '<div class="placeholder">Hourly data not available.</div>';
-      }
-
-      // Daily grid (7 days)
-      dailyGrid.innerHTML = '';
-      if(data.daily && data.daily.time){
-        for(let i=0;i<Math.min(data.daily.time.length, 7); i++){
-          const day = data.daily.time[i];
-          const hi = data.daily.temperature_2m_max?.[i];
-          const lo = data.daily.temperature_2m_min?.[i];
-          const code = data.daily.weathercode?.[i];
-          const dow = new Date(day).toLocaleDateString([], {weekday:'short', month:'short', day:'numeric'});
-          const el = document.createElement('div');
-          el.className = 'day-card';
-          el.innerHTML = `
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <div style="font-weight:700">${dow}</div>
-              <div>${smallIconSVG(code)}</div>
-            </div>
-            <div class="muted" style="margin-top:8px">${capitalize(weatherCodeToText(code))}</div>
-            <div style="margin-top:8px;display:flex;justify-content:space-between;gap:8px">
-              <div><strong>${hi != null ? Math.round(hi) + tempUnit : '—'}</strong><div class="muted" style="font-size:12px">High</div></div>
-              <div><strong>${lo != null ? Math.round(lo) + tempUnit : '—'}</strong><div class="muted" style="font-size:12px">Low</div></div>
-            </div>
-          `;
-          dailyGrid.appendChild(el);
-        }
-      } else {
-        dailyGrid.innerHTML = '<div class="placeholder">Daily data not available.</div>';
-      }
-
-      // Details
-      windSpeed.textContent = cur.windspeed != null ? `${Math.round(cur.windspeed)} ${state.units === 'metric' ? 'm/s' : 'mph'}` : '—';
-      // Open-Meteo does not return pressure in current_weather; skip or display NA
-      pressure.textContent = (nearestHourlyValue(state.data.hourly, 'pressure_msl', cur.time) != null) ? `${Math.round(nearestHourlyValue(state.data.hourly, 'pressure_msl', cur.time))} hPa` : '—';
-      uvIndex.textContent = (nearestHourlyValue(state.data.hourly, 'uv_index', cur.time) != null) ? `${nearestHourlyValue(state.data.hourly, 'uv_index', cur.time)}` : '—';
-
-      applyWeatherBackground(wcode);
-
-      // Save last to localStorage (light)
-      try{ localStorage.setItem('atlas_last', JSON.stringify(state)); } catch(e){}
-
-    }
-
-    // ====== Helpers & Utilities ======
-    function escapeHtml(s){
-      return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    }
-    function capitalize(s){ return s ? s.charAt(0).toUpperCase() + s.slice(1) : '' }
-
-    // returns nearest hourly value from a named series to a given time string
-    function nearestHourlyValue(hourly, varname, targetTime){
-      if(!hourly || !hourly.time || !hourly[varname]) return null;
-      const idx = hourly.time.findIndex(t => t === targetTime);
-      if(idx !== -1) return hourly[varname][idx];
-      // fallback: take first value
-      return hourly[varname][0];
-    }
-
-    // infer feels-like (prefer apparent_temperature if present)
-    function inferFeelsLike(state, cur){
-      try{
-        if(state.data.hourly && state.data.hourly.apparent_temperature){
-          const idx = state.data.hourly.time.findIndex(t => t === cur.time);
-          if(idx !== -1) return state.data.hourly.apparent_temperature[idx];
-          return state.data.hourly.apparent_temperature[0];
-        }
-        return null;
-      } catch(e){ return null; }
-    }
-
-    // time formatting helpers (Open-Meteo returns ISO-like "2023-09-01T12:00")
-    function toLocalHour(timestr, tz){
-      try{
-        const d = new Date(timestr);
-        return d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-      } catch(e){
-        return timestr;
-      }
-    }
-
-    // ====== Weather code mapping (Open-Meteo weathercode -> text)
-    // Source: WMO weather interpretation codes used by Open-Meteo
-    function weatherCodeToText(code){
-      // codes from https://open-meteo.com/en/docs#api_form
-      const map = {
-        0: 'Clear sky',
-        1: 'Mainly clear',
-        2: 'Partly cloudy',
-        3: 'Overcast',
-        45: 'Fog',
-        48: 'Depositing rime fog',
-        51: 'Light drizzle',
-        53: 'Moderate drizzle',
-        55: 'Dense drizzle',
-        56: 'Light freezing drizzle',
-        57: 'Dense freezing drizzle',
-        61: 'Slight rain',
-        63: 'Moderate rain',
-        65: 'Heavy rain',
-        66: 'Light freezing rain',
-        67: 'Heavy freezing rain',
-        71: 'Slight snow fall',
-        73: 'Moderate snow fall',
-        75: 'Heavy snow fall',
-        77: 'Snow grains',
-        80: 'Slight rain showers',
-        81: 'Moderate rain showers',
-        82: 'Violent rain showers',
-        85: 'Slight snow showers',
-        86: 'Heavy snow showers',
-        95: 'Thunderstorm',
-        96: 'Thunderstorm with slight hail',
-        99: 'Thunderstorm with heavy hail'
-      };
-      return map[code] || 'Unknown';
-    }
-
-    // tiny SVG icons for display (keeps app local & fast)
-    function smallIconSVG(code){
-      // return small inline SVG markup representing sun/cloud/rain/snow/thunder
-      const c = Number(code);
-      if(c === 0 || c === 1) return sunSVG(40);
-      if(c === 2 || c === 3 || (c >= 45 && c <= 48)) return cloudSVG(40);
-      if((c >= 51 && c <= 67) || (c >= 80 && c <= 82)) return rainSVG(40);
-      if((c >= 71 && c <= 86) || c === 77) return snowSVG(40);
-      if(c >= 95) return thunderSVG(40);
-      return sunSVG(40);
-    }
-    function iconForWeatherCode(code){
-      return `<div style="display:grid;place-items:center;width:84px;height:84px">${smallIconSVG(code)}</div>`;
-    }
-
-    function sunSVG(size=48){
-      return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6" fill="rgba(255,205,86,0.12)"/>
-        <g stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
-          <path d="M12 1v2"/>
-          <path d="M12 21v2"/>
-          <path d="M4.2 4.2l1.4 1.4"/>
-          <path d="M18.4 18.4l1.4 1.4"/>
-          <path d="M1 12h2"/>
-          <path d="M21 12h2"/>
-          <path d="M4.2 19.8l1.4-1.4"/>
-          <path d="M18.4 5.6l1.4-1.4"/>
-        </g>
-      </svg>`;
-    }
-    function cloudSVG(size=48){
-      return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20 17.5A4.5 4.5 0 0015.5 13H14a4 4 0 10-7.9 1.2A3.5 3.5 0 006.5 19H19a1 1 0 001-1.5z" fill="rgba(200,215,230,0.06)" stroke="currentColor" stroke-width="1.2"/>
-      </svg>`;
-    }
-    function rainSVG(size=48){
-      return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20 17.5A4.5 4.5 0 0015.5 13H14a4 4 0 10-7.9 1.2A3.5 3.5 0 006.5 19H19" fill="rgba(110,150,220,0.06)" stroke="currentColor" stroke-width="1.2"/>
-        <path d="M8 20l1.2-2M12 20l1.2-2M16 20l1.2-2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-      </svg>`;
-    }
-    function snowSVG(size=48){
-      return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20 17.5A4.5 4.5 0 0015.5 13H14a4 4 0 10-7.9 1.2A3.5 3.5 0 006.5 19H19" fill="rgba(220,240,255,0.04)" stroke="currentColor" stroke-width="1.2"/>
-        <g stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
-          <path d="M8 20l0.8-0.6M8 18.6l0.8 0.6M7.2 19.2h1.6"/>
-          <path d="M12 20l0.8-0.6M12 18.6l0.8 0.6M11.2 19.2h1.6"/>
-          <path d="M16 20l0.8-0.6M16 18.6l0.8 0.6M15.2 19.2h1.6"/>
-        </g>
-      </svg>`;
-    }
-    function thunderSVG(size=48){
-      return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20 16.5A4.5 4.5 0 0015.5 12H14a4 4 0 10-7.9 1.2A3.5 3.5 0 006.5 18H19" fill="rgba(255,220,120,0.04)" stroke="currentColor" stroke-width="1.2"/>
-        <path d="M13 10l-3 6h4l-3 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>`;
-    }
-
-    // background vibe
-    function applyWeatherBackground(code){
-      const blobA = document.querySelector('.blob.a');
-      const blobB = document.querySelector('.blob.b');
-      const c = Number(code);
-      if(c >= 51 && c <= 67 || (c >= 80 && c <= 82) || (c >= 95)) {
-        // rainy / thunder
-        blobA.style.background = 'linear-gradient(90deg,#3b82f6,#6366f1)';
-        blobB.style.background = 'linear-gradient(90deg,#0ea5e9,#06b6d4)';
-      } else if(c >= 71 && c <= 86 || c === 77) {
-        // snow
-        blobA.style.background = 'linear-gradient(90deg,#93c5fd,#e0f2fe)';
-        blobB.style.background = 'linear-gradient(90deg,#bae6fd,#bfdbfe)';
-      } else if(c === 0 || c === 1) {
-        // clear
-        blobA.style.background = 'linear-gradient(90deg,#f59e0b,#f97316)';
-        blobB.style.background = 'linear-gradient(90deg,#f97316,#fb7185)';
-      } else {
-        // cloud/others
-        blobA.style.background = 'linear-gradient(90deg,#2dd4bf,#60a5fa)';
-        blobB.style.background = 'linear-gradient(90deg,#94a3b8,#64748b)';
-      }
-    }
-
-    // ====== Utility: convert ISO-ish time to Date reliably
-    // Open-Meteo returns times like "2023-09-01T12:00"
-    // Safari sometimes needs "2023-09-01T12:00:00" — we add seconds if missing.
-    function safeDate(s){
-      if(!s) return new Date();
-      return new Date(s.length === 16 ? s + ':00' : s);
-    }
-
-    // ====== Misc helpers ======
-    function toLocalHourISO(s, tz){
-      try{
-        const d = safeDate(s);
-        return d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-      } catch(e){
-        return s;
-      }
-    }
-
-    // alias used earlier
-    function toLocalHour(timestr, tz){ return toLocalHourISO(timestr, tz); }
-
-    // ====== End of app code ======
-  </script>
+</script>
 </body>
 </html>
