@@ -1,441 +1,756 @@
 <!doctype html>
-
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Shariq Ali — Design & Frontend Portfolio</title>
-  <meta name="description" content="Design-focused, responsive and clean portfolio. Mobile-first single-file template." />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Aurora — Modern Landing Page</title>
+  <meta name="description" content="Aurora — a modern, responsive, fully-styled demo landing page built with HTML, CSS and JS." />
+  <meta name="author" content="HTML + CSS + Javascript GPT" />
+
   <style>
-    /* ==========================
-       CSS VARIABLES (mobile-first)
-       ========================== */
+    /* -------------------------
+       Reset & base
+       ------------------------- */
     :root{
-      --bg: #0f1724; /* deep navy */
-      --card: #0b1220;
-      --muted: #98a0b3;
-      --accent: #7c5cff;
-      --accent-2: #22c1c3;
+      --bg:#0f1724;
+      --card:#0b1220;
+      --muted:#9aa4b2;
+      --accent:#7c5cff;
+      --accent-2:#00d4ff;
       --glass: rgba(255,255,255,0.04);
-      --radius: 14px;
-      --max-width: 1100px;
-      --ff: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      --glass-2: rgba(255,255,255,0.02);
+      --radius:14px;
+      --max-width:1100px;
       color-scheme: dark;
-    }body.light{
-  --bg: #f7fafc;
-  --card: #ffffff;
-  --muted: #5b6470;
-  --accent: #5b21b6;
-  --accent-2: #0891b2;
-  --glass: rgba(10,10,10,0.04);
-  color-scheme: light;
-}
+      --font-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
 
-/* Reset */
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  font-family:var(--ff);
-  background:linear-gradient(180deg,var(--bg), #071022 120%);
-  color: #e6eef8;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  line-height:1.45;
-  padding:20px 14px;display:flex;justify-content:center;
-}
-a{color:inherit;text-decoration:none}
+    /* Light theme variables (will be toggled via .light on <html>) */
+    html.light {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --muted: #55606b;
+      --accent: #5b21b6;
+      --accent-2: #007ea7;
+      --glass: rgba(11,18,24,0.03);
+      --glass-2: rgba(11,18,24,0.02);
+      color-scheme: light;
+    }
 
-.container{width:100%;max-width:var(--max-width)}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--font-sans);
+      background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(124,92,255,0.10), transparent 8%),
+        radial-gradient(1000px 500px at 90% 90%, rgba(0,212,255,0.06), transparent 12%),
+        linear-gradient(180deg, var(--bg), color-mix(in srgb, var(--bg) 70%, black 20%));
+      color: #e6eef6;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+      padding:32px 20px;
+      display:flex;
+      justify-content:center;
+    }
 
-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;font-weight:800;color:white;font-size:18px;box-shadow:0 8px 26px rgba(0,0,0,0.35)}
-.brand h1{font-size:16px;margin:0}
-.brand p{margin:0;font-size:12px;color:var(--muted)}
+    /* Container */
+    .wrap{
+      width:100%;
+      max-width:var(--max-width);
+    }
 
-.controls{display:flex;gap:8px;align-items:center}
-.btn{background:var(--glass);border:1px solid rgba(255,255,255,0.04);padding:9px 14px;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer;backdrop-filter:blur(6px)}
-.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06)}
+    header{
+      display:flex;
+      gap:16px;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:28px;
+      position:relative;
+    }
 
-/* Hero */
-.hero{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border-radius:var(--radius);padding:18px;display:grid;gap:14px}
-.hero-grid{display:grid;grid-template-columns:1fr;gap:16px}
-.intro h2{margin:0;font-size:20px}
-.intro p{margin:0;color:var(--muted)}
-.hero-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    /* Logo */
+    .logo{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      font-weight:600;
+      letter-spacing:0.2px;
+    }
+    .logo svg{width:44px;height:44px;flex-shrink:0;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));padding:6px}
 
-.hero-visual{border-radius:12px;overflow:hidden;min-height:160px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center}
-.hero-visual img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(6%)}
+    /* Nav */
+    nav{
+      display:flex;
+      gap:14px;
+      align-items:center;
+    }
+    nav a{
+      color:var(--muted);
+      text-decoration:none;
+      padding:8px 10px;
+      border-radius:8px;
+      font-weight:600;
+      transition:all .18s ease;
+      font-size:15px;
+    }
+    nav a:hover, nav a:focus{
+      color: #fff;
+      background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+      outline: none;
+    }
 
-.stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-.stat{background:linear-gradient(180deg,transparent, rgba(255,255,255,0.01));padding:10px 12px;border-radius:12px;font-weight:700;font-size:13px;color:var(--muted)}
+    .cta{
+      background: linear-gradient(90deg,var(--accent),var(--accent-2));
+      color:#fff;
+      padding:10px 16px;
+      border-radius:12px;
+      box-shadow: 0 8px 30px rgba(124,92,255,0.18);
+      font-weight:700;
+    }
 
-/* Sections */
-section{margin-top:20px}
-h3{margin:0 0 12px 0;font-size:16px}
+    /* Mobile nav toggle */
+    .menu-toggle{
+      display:none;
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.04);
+      color:var(--muted);
+      padding:8px;
+      border-radius:10px;
+    }
 
-.projects-grid{display:grid;grid-template-columns:1fr;gap:12px}
-.card{background:var(--card);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 8px 22px rgba(2,6,23,0.6)}
-.project-card{display:flex;gap:12px;align-items:flex-start;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease}
-.project-card:focus,.project-card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(2,6,23,0.7)}
-.project-thumb{flex:0 0 110px;height:84px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:white;font-weight:800;font-size:15px;overflow:hidden}
-.project-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.project-meta{flex:1}
-.project-meta p{margin:6px 0 0 0;color:var(--muted);font-size:13px}
-.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.tag{font-size:12px;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.03);font-weight:700}
+    /* Hero */
+    .hero{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:28px;
+      align-items:center;
+      margin-bottom:42px;
+    }
 
-/* Modal */
-.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(180deg, rgba(2,6,23,0.7), rgba(2,6,23,0.86));z-index:60;padding:24px}
-.modal.open{display:flex}
-.modal .panel{width:100%;max-width:980px;background:var(--card);padding:18px;border-radius:14px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 24px 60px rgba(2,6,23,0.8)}
-.modal .panel .visual{height:260px;border-radius:10px;overflow:hidden;margin-bottom:12px}
-.modal .panel img{width:100%;height:100%;object-fit:cover;display:block}
+    .hero-inner{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+      padding:28px;
+      border-radius:18px;
+      box-shadow: 0 10px 40px rgba(2,6,23,0.6);
+      display:grid;
+      grid-template-columns:1fr;
+      gap:20px;
+      align-items:center;
+    }
 
-/* Skills */
-.skill-list{display:flex;flex-wrap:wrap;gap:10px}
-.skill{background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent);padding:8px 10px;border-radius:10px;font-weight:700}
+    .hero-left h1{
+      margin:0 0 8px 0;
+      font-size:clamp(26px, 4vw, 42px);
+      line-height:1.05;
+      letter-spacing:-0.6px;
+    }
+    .hero-left p{
+      margin:0;
+      color:var(--muted);
+      font-size:16px;
+    }
 
-/* Contact */
-.contact-grid{display:grid;gap:12px}
-input,textarea,select{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;font-size:14px}
-textarea{min-height:120px}
-.form-row{display:grid;gap:10px}
+    .hero-illustration{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      margin-top:8px;
+    }
 
-footer{margin-top:20px;text-align:center;color:var(--muted);font-size:13px}
+    .feature-grid{
+      display:grid;
+      gap:14px;
+      grid-template-columns:repeat(1,1fr);
+    }
 
-/* Desktop */
-@media(min-width:760px){
-  body{padding:36px}
-  .hero-grid{grid-template-columns:1fr 380px}
-  .projects-grid{grid-template-columns:repeat(2,1fr)}
-  .contact-grid{grid-template-columns:1fr 320px}
-}
-@media(min-width:1040px){
-  .projects-grid{grid-template-columns:repeat(3,1fr)}
-}
+    .card{
+      background:linear-gradient(180deg, var(--glass), var(--glass-2));
+      border-radius:14px;
+      padding:18px;
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+    }
 
-/* helpers */
-.muted{color:var(--muted)}
-.center{display:flex;align-items:center;justify-content:center}
+    .card h3{margin:0 0 6px 0;font-size:16px}
+    .card p{margin:0;color:var(--muted);font-size:14px}
 
-/* small animation */
-.fade-up{opacity:0;transform:translateY(8px);transition:opacity .45s ease,transform .45s ease}
-.fade-up.in{opacity:1;transform:none}
+    /* Feature area */
+    .features{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
+      margin:30px 0;
+    }
 
+    .feature{
+      padding:18px;
+      border-radius:12px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+      text-align:left;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+    .feature svg{width:36px;height:36px;margin-bottom:8px}
+
+    /* Pricing */
+    .pricing{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
+      align-items:start;
+    }
+    .plan{
+      padding:22px;
+      border-radius:14px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.03);
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      min-height:220px;
+    }
+    .plan .price{font-size:22px;font-weight:800}
+    .plan .per{color:var(--muted);font-weight:600;font-size:13px}
+
+    /* Testimonials - carousel */
+    .testimonials{
+      padding:18px;
+      border-radius:14px;
+      background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent);
+      border:1px solid rgba(255,255,255,0.03);
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .testimonial{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      min-width:280px;
+    }
+    .t-meta{display:flex;gap:12px;align-items:center}
+    .avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(90deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff}
+
+    .controls{display:flex;gap:8px;align-items:center}
+    .btn{
+      background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px;border-radius:8px;color:var(--muted);cursor:pointer
+    }
+
+    /* Contact */
+    .contact{
+      display:grid;
+      grid-template-columns:1fr 380px;
+      gap:18px;
+      margin-top:20px;
+    }
+    form{
+      display:flex;flex-direction:column;gap:10px;
+      padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+      border:1px solid rgba(255,255,255,0.03);
+    }
+    input, textarea, select{
+      background:transparent;border:1px solid rgba(255,255,255,0.04);padding:10px;border-radius:8px;color:inherit;
+      font-size:14px;outline:none;
+    }
+    input::placeholder, textarea::placeholder{color:rgba(255,255,255,0.25)}
+    .error{border-color:#ff6b6b !important}
+    .hint{font-size:13px;color:var(--muted)}
+
+    footer{margin-top:36px;color:var(--muted);font-size:13px;text-align:center;padding-bottom:40px}
+
+    /* Responsive */
+    @media (max-width:980px){
+      .features{grid-template-columns:repeat(2,1fr)}
+      .pricing{grid-template-columns:repeat(2,1fr)}
+      .contact{grid-template-columns:1fr}
+      .hero-inner{grid-template-columns:1fr}
+      .testimonials{overflow:hidden}
+    }
+    @media (max-width:720px){
+      header{flex-direction:column;align-items:stretch;gap:12px}
+      nav{display:none}
+      .menu-toggle{display:inline-flex}
+      .hero{grid-template-columns:1fr}
+      .features{grid-template-columns:1fr}
+      .pricing{grid-template-columns:1fr}
+    }
+
+    /* small niceties */
+    .muted{color:var(--muted)}
+    .pill{background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:999px;font-weight:700}
+    .kbd{background:rgba(255,255,255,0.02);padding:4px 8px;border-radius:6px;font-weight:700;font-size:13px}
+
+    /* animations */
+    @media (prefers-reduced-motion: no-preference){
+      .hero-left h1{animation:heroTitle .7s cubic-bezier(.2,.9,.3,1)}
+      .card{transition:transform .28s ease, box-shadow .28s ease}
+      .card:hover{transform:translateY(-6px);box-shadow:0 18px 50px rgba(2,6,23,0.6)}
+      @keyframes heroTitle{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    }
+
+    /* small utilities */
+    .center{display:flex;align-items:center;justify-content:center}
+    .mt-6{margin-top:24px}
+    .mb-4{margin-bottom:16px}
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="wrap" id="app">
     <header>
-      <div class="brand">
-        <div class="logo">SA</div>
+      <div class="logo" aria-hidden="false">
+        <!-- Inline SVG brand mark -->
+        <svg viewBox="0 0 40 40" aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g1" x1="0%" x2="100%" y1="0%" y2="100%">
+              <stop offset="0%" stop-color="#7c5cff"/>
+              <stop offset="100%" stop-color="#00d4ff"/>
+            </linearGradient>
+          </defs>
+          <rect width="40" height="40" rx="8" fill="url(#g1)"/>
+          <path d="M10 26c6 0 6-12 12-12" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
         <div>
-          <h1>Shariq Ali</h1>
-          <p class="muted">Design-focused Frontend Developer</p>
+          <div style="font-size:15px">Aurora</div>
+          <div class="muted" style="font-size:12px">Design · Product · UI</div>
         </div>
-      </div><div class="controls">
-    <button class="btn ghost" id="resumeBtn">Download CV</button>
-    <div class="nav-toggle">
-      <button class="btn" id="themeToggle" aria-pressed="false" title="Toggle theme">🌗</button>
+      </div>
+
+      <nav aria-label="Main navigation">
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#testimonials">Testimonials</a>
+        <a href="#contact" class="cta">Get started</a>
+      </nav>
+
+      <div style="display:flex;gap:10px;align-items:center">
+        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mobileNav" aria-label="Toggle menu">☰</button>
+        <button class="btn" id="themeBtn" aria-pressed="false" title="Toggle theme">🌙</button>
+      </div>
+    </header>
+
+    <!-- Mobile nav (hidden on desktop) -->
+    <div id="mobileNav" style="display:none;margin-bottom:16px;">
+      <div class="card" style="padding:12px;display:flex;flex-direction:column;gap:8px">
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#testimonials">Testimonials</a>
+        <a href="#contact" class="cta" style="text-align:center">Get started</a>
+      </div>
+    </div>
+
+    <main>
+      <section class="hero">
+        <div class="hero-inner">
+          <div class="hero-left">
+            <div class="pill">New — AI assisted prototypes</div>
+            <h1>Design faster. Ship smarter.</h1>
+            <p class="muted">Aurora helps teams design modern, accessible products — with reusable components, gorgeous visuals and built-in developer handoff tools.</p>
+
+            <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
+              <a class="cta" href="#contact">Start free trial</a>
+              <button class="btn" id="demoBtn">Watch demo</button>
+              <span class="kbd">Try ⇧ + K</span>
+            </div>
+          </div>
+
+          <div class="hero-illustration">
+            <!-- Simple "device" mockup using CSS + SVG -->
+            <div class="card" style="width:360px;max-width:80%;">
+              <div style="display:flex;gap:12px;align-items:center;justify-content:space-between">
+                <div>
+                  <div class="muted" style="font-size:12px">Dashboard</div>
+                  <div style="font-weight:800;font-size:20px">Revenue growth</div>
+                </div>
+                <div class="pill">Pro</div>
+              </div>
+
+              <div style="margin-top:12px">
+                <svg viewBox="0 0 320 70" width="100%" height="70" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="lg" x1="0" x2="1">
+                      <stop offset="0" stop-color="#7c5cff"/>
+                      <stop offset="1" stop-color="#00d4ff"/>
+                    </linearGradient>
+                  </defs>
+                  <rect x="0" y="0" width="320" height="70" rx="8" fill="rgba(0,0,0,0.06)"></rect>
+                  <polyline fill="none" stroke="url(#lg)" stroke-width="4" stroke-linecap="round" points="10,50 60,30 110,36 160,18 210,28 260,16 310,22"/>
+                </svg>
+              </div>
+
+              <div style="display:flex;gap:10px;margin-top:12px;align-items:center">
+                <div style="flex:1">
+                  <div style="font-size:12px;color:var(--muted)">Active</div>
+                  <div style="font-weight:800">12,430</div>
+                </div>
+                <div style="flex:1">
+                  <div style="font-size:12px;color:var(--muted)">Conversion</div>
+                  <div style="font-weight:800">5.4%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- quick stats -->
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px">
+          <div class="card" style="min-width:160px">
+            <h3>2.3x</h3>
+            <p class="muted">Faster prototyping</p>
+          </div>
+          <div class="card" style="min-width:160px">
+            <h3>120+</h3>
+            <p class="muted">UI components</p>
+          </div>
+          <div class="card" style="min-width:160px">
+            <h3>99.9%</h3>
+            <p class="muted">Uptime SLA</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="features">
+        <h2 style="margin:0 0 12px 0">Features</h2>
+        <p class="muted" style="margin:0 0 18px 0">Everything you need to design, prototype and ship beautiful products.</p>
+
+        <div class="features">
+          <div class="feature">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 12h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+            <h3 style="margin:6px 0 8px 0">Component Library</h3>
+            <p class="muted">Over 120 reusable components ready for Figma & code.</p>
+          </div>
+
+          <div class="feature">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2v20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+            <h3 style="margin:6px 0 8px 0">Design Tokens</h3>
+            <p class="muted">Maintain consistency with token-driven theming and spacing scales.</p>
+          </div>
+
+          <div class="feature">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 3l18 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+            <h3 style="margin:6px 0 8px 0">Developer Handoff</h3>
+            <p class="muted">Export code snippets and assets automatically for engineers.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="pricing" class="mt-6">
+        <h2 style="margin:0 0 12px 0">Pricing</h2>
+        <p class="muted" style="margin:0 0 18px 0">Simple, predictable pricing. No surprises. Cancel any time.</p>
+
+        <div class="pricing">
+          <div class="plan">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div style="font-weight:700">Starter</div>
+                <div class="muted">For solo creators</div>
+              </div>
+              <div class="pill">Popular</div>
+            </div>
+            <div class="price">$9 <span class="per">/mo</span></div>
+            <div class="muted">All basic components, email support.</div>
+            <div style="margin-top:auto">
+              <button class="cta">Choose Starter</button>
+            </div>
+          </div>
+
+          <div class="plan" style="border: 1px solid rgba(124,92,255,0.18); box-shadow:0 10px 40px rgba(124,92,255,0.06)">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div style="font-weight:700">Pro</div>
+                <div class="muted">For teams</div>
+              </div>
+              <div class="pill">Best value</div>
+            </div>
+            <div class="price">$29 <span class="per">/mo</span></div>
+            <div class="muted">Everything in Starter + design tokens, prototypes.</div>
+            <div style="margin-top:auto">
+              <button class="cta">Choose Pro</button>
+            </div>
+          </div>
+
+          <div class="plan">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div style="font-weight:700">Enterprise</div>
+                <div class="muted">Advanced requirements</div>
+              </div>
+              <div class="pill">Custom</div>
+            </div>
+            <div class="price">Contact</div>
+            <div class="muted">SAML SSO, dedicated support, SLA.</div>
+            <div style="margin-top:auto">
+              <button class="btn" id="contactSales">Contact sales</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="testimonials" class="mt-6">
+        <h2 style="margin:0 0 12px 0">What our users say</h2>
+        <p class="muted" style="margin:0 0 18px 0">Short testimonials from real customers.</p>
+
+        <div class="testimonials" id="carousel" aria-live="polite">
+          <div class="testimonial" data-index="0">
+            <div class="t-meta">
+              <div class="avatar">AL</div>
+              <div>
+                <div style="font-weight:700">Alex Lee</div>
+                <div class="muted" style="font-size:13px">Product Designer at Nova</div>
+              </div>
+            </div>
+            <div class="muted">"Aurora reduced our prototyping time by 2x — the components are beautiful and consistent."</div>
+          </div>
+
+          <div class="testimonial" data-index="1" style="display:none">
+            <div class="t-meta">
+              <div class="avatar">MS</div>
+              <div>
+                <div style="font-weight:700">Maria Silva</div>
+                <div class="muted" style="font-size:13px">CTO, Skylark</div>
+              </div>
+            </div>
+            <div class="muted">"Dev handoff became a breeze. We ship feature parity faster than ever."</div>
+          </div>
+
+          <div class="testimonial" data-index="2" style="display:none">
+            <div class="t-meta">
+              <div class="avatar">JT</div>
+              <div>
+                <div style="font-weight:700">Jon Turner</div>
+                <div class="muted" style="font-size:13px">Founder, Microco</div>
+              </div>
+            </div>
+            <div class="muted">"Reliable, fast, and a joy to use — the dashboard screens are stunning."</div>
+          </div>
+
+          <div class="controls" style="margin-left:auto">
+            <button class="btn" id="prevTest" aria-label="Previous testimonial">◀</button>
+            <button class="btn" id="nextTest" aria-label="Next testimonial">▶</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="mt-6">
+        <h2 style="margin:0 0 12px 0">Get in touch</h2>
+        <p class="muted" style="margin:0 0 18px 0">Questions? Want a demo or enterprise quote? Send us a message.</p>
+
+        <div class="contact">
+          <form id="contactForm" novalidate>
+            <label>
+              <div class="muted">Full name</div>
+              <input type="text" id="name" name="name" placeholder="Your name" required />
+            </label>
+
+            <label>
+              <div class="muted">Email</div>
+              <input type="email" id="email" name="email" placeholder="you@company.com" required />
+            </label>
+
+            <label>
+              <div class="muted">Subject</div>
+              <input type="text" id="subject" name="subject" placeholder="Quick question..." />
+            </label>
+
+            <label>
+              <div class="muted">Message</div>
+              <textarea id="message" name="message" rows="5" placeholder="Tell us about your needs..." required></textarea>
+            </label>
+
+            <div style="display:flex;gap:10px;align-items:center">
+              <button class="cta" type="submit">Send message</button>
+              <div class="hint">Or email us at <a href="mailto:hello@aurora.example" style="color:inherit;text-decoration:underline">hello@aurora.example</a></div>
+            </div>
+          </form>
+
+          <aside class="card">
+            <h3 style="margin-top:0">Office</h3>
+            <p class="muted">123 Aurora Lane<br/>Karachi, Pakistan</p>
+            <div class="mt-6">
+              <h4 style="margin:0 0 8px 0">Hours</h4>
+              <div class="muted">Mon — Fri: 9:00 — 18:00</div>
+              <div class="muted">Sat: 10:00 — 14:00</div>
+            </div>
+
+            <div class="mt-6">
+              <h4 style="margin:0 0 8px 0">Phone</h4>
+              <div class="muted">+92 21 0000 0000</div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <footer>
+        © <span id="year"></span> Aurora — Built with ❤️ by HTML + CSS + Javascript GPT
+      </footer>
+    </main>
+  </div>
+
+  <!-- Demo modal -->
+  <div id="demoModal" role="dialog" aria-modal="true" aria-hidden="true" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:24px;z-index:80">
+    <div style="background:linear-gradient(180deg, rgba(11,18,24,0.9), rgba(11,18,24,0.95));padding:22px;border-radius:12px;max-width:880px;width:100%;color:#fff;border:1px solid rgba(255,255,255,0.04);box-shadow:0 40px 120px rgba(2,6,23,0.8)">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:18px;font-weight:800">Product demo</div>
+          <div class="muted" style="font-size:13px">Fast preview</div>
+        </div>
+        <button class="btn" id="closeDemo" aria-label="Close demo">✕</button>
+      </div>
+
+      <div style="margin-top:14px">
+        <!-- faux video area -->
+        <div style="background:linear-gradient(90deg,var(--accent),var(--accent-2));height:360px;border-radius:10px;display:flex;align-items:center;justify-content:center">
+          <div style="font-size:30px;font-weight:700;color:#012">▶</div>
+        </div>
+      </div>
     </div>
   </div>
-</header>
 
-<main>
-  <!-- HERO -->
-  <section class="hero card" aria-labelledby="introTitle">
-    <div class="hero-grid">
-      <div class="intro">
-        <h2 id="introTitle">Salaam — main Shariq. Main clean UI aur responsive design banata hoon.</h2>
-        <p class="muted">Mobile-first approach, accessible components, aur production-ready markup. Focus: design systems, component libraries, and polished micro-interactions.</p>
-
-        <div class="hero-actions">
-          <a class="btn" href="#projects">Projects</a>
-          <a class="btn ghost" href="#contact">Hire / Contact</a>
-        </div>
-
-        <div class="stats" aria-hidden>
-          <div class="stat">8+ Projects</div>
-          <div class="stat">UI/UX & Frontend</div>
-          <div class="stat">Mobile-first</div>
-        </div>
-      </div>
-
-      <aside class="card" style="align-self:start">
-        <div class="hero-visual" aria-hidden>
-          <!-- Hero image (internet dummy) -->
-          <img alt="abstract hero" loading="lazy" src="https://picsum.photos/id/1018/1200/600">
-        </div>
-
-        <h3>Quick profile</h3>
-        <p class="muted">I design interfaces that feel fast and polished. I enjoy building design systems and working closely with product teams to ship delightful experiences.</p>
-        <div style="height:12px"></div>
-        <div class="skill-list">
-          <div class="skill">Design Systems</div>
-          <div class="skill">Responsive UI</div>
-          <div class="skill">Accessibility</div>
-          <div class="skill">Interactions</div>
-          <div class="skill">React / HTML / CSS</div>
-        </div>
-      </aside>
-    </div>
-  </section>
-
-  <!-- Projects -->
-  <section id="projects">
-    <h3>Projects</h3>
-    <div class="projects-grid" id="projectsGrid">
-
-      <!-- Project 1 -->
-      <article class="card project-card fade-up" tabindex="0" data-title="Design System Library" data-desc="A component library with tokens, accessible components, and storybook integration." data-img="https://picsum.photos/id/1005/800/600" data-tags="Design,Components,Accessibility">
-        <div class="project-thumb"><img alt="DSL" loading="lazy" src="https://picsum.photos/id/1005/300/200"></div>
-        <div class="project-meta">
-          <strong>Design System Library</strong>
-          <p class="muted">Component tokens, accessible components, and Storybook-based docs.</p>
-          <div class="tags"><span class="tag">Design</span><span class="tag">React</span><span class="tag">Accessibility</span></div>
-        </div>
-      </article>
-
-      <!-- Project 2 -->
-      <article class="card project-card fade-up" tabindex="0" data-title="E‑commerce UI" data-desc="Fast, accessible checkout flows with focus on conversion and trust signals." data-img="https://picsum.photos/id/1011/800/600" data-tags="E‑commerce,Payments,UX">
-        <div class="project-thumb"><img alt="Ecommerce" loading="lazy" src="https://picsum.photos/id/1011/300/200"></div>
-        <div class="project-meta">
-          <strong>E‑commerce UI</strong>
-          <p class="muted">Fast, accessible checkout flows with focus on conversion and trust.</p>
-          <div class="tags"><span class="tag">UX</span><span class="tag">Payments</span><span class="tag">Performance</span></div>
-        </div>
-      </article>
-
-      <!-- Project 3 -->
-      <article class="card project-card fade-up" tabindex="0" data-title="Portfolio CMS" data-desc="A headless CMS-powered portfolio with markdown support and quick authoring." data-img="https://picsum.photos/id/1025/800/600" data-tags="CMS,Headless,Performance">
-        <div class="project-thumb"><img alt="Portfolio CMS" loading="lazy" src="https://picsum.photos/id/1025/300/200"></div>
-        <div class="project-meta">
-          <strong>Portfolio CMS</strong>
-          <p class="muted">Headless CMS, markdown support, and blazing-fast previews.</p>
-          <div class="tags"><span class="tag">CMS</span><span class="tag">Static</span><span class="tag">Preview</span></div>
-        </div>
-      </article>
-
-      <!-- Project 4 -->
-      <article class="card project-card fade-up" tabindex="0" data-title="Mobile App Mockups" data-desc="High-fidelity mobile mockups and interactive prototypes for user testing." data-img="https://picsum.photos/id/1000/800/600" data-tags="Mobile,Prototyping,Testing">
-        <div class="project-thumb"><img alt="Mobile" loading="lazy" src="https://picsum.photos/id/1000/300/200"></div>
-        <div class="project-meta">
-          <strong>Mobile App Mockups</strong>
-          <p class="muted">Interactive prototypes and user-tested flows for mobile products.</p>
-          <div class="tags"><span class="tag">Prototyping</span><span class="tag">Testing</span></div>
-        </div>
-      </article>
-
-      <!-- Project 5 -->
-      <article class="card project-card fade-up" tabindex="0" data-title="Marketing Site Redesign" data-desc="Redesigned marketing site with improved conversions and analytics-driven content." data-img="https://picsum.photos/id/1031/800/600" data-tags="Marketing,Analytics,Conversion">
-        <div class="project-thumb"><img alt="Marketing" loading="lazy" src="https://picsum.photos/id/1031/300/200"></div>
-        <div class="project-meta">
-          <strong>Marketing Site Redesign</strong>
-          <p class="muted">Conversion-focused pages and analytics-driven content experiments.</p>
-          <div class="tags"><span class="tag">Analytics</span><span class="tag">CRO</span></div>
-        </div>
-      </article>
-
-      <!-- Project 6 -->
-      <article class="card project-card fade-up" tabindex="0" data-title="Dashboard & Data Viz" data-desc="Design and build dashboards with performant charts and exportable reports." data-img="https://picsum.photos/id/1043/800/600" data-tags="Dashboard,Charts,Data">
-        <div class="project-thumb"><img alt="Dashboard" loading="lazy" src="https://picsum.photos/id/1043/300/200"></div>
-        <div class="project-meta">
-          <strong>Dashboard & Data Viz</strong>
-          <p class="muted">Performant charts, exportable reports, and data-driven components.</p>
-          <div class="tags"><span class="tag">Data</span><span class="tag">Charts</span></div>
-        </div>
-      </article>
-
-    </div>
-  </section>
-
-  <!-- Skills -->
-  <section>
-    <h3>Skills</h3>
-    <div class="card">
-      <div class="skill-list">
-        <div class="skill">HTML & Accessibility</div>
-        <div class="skill">Modern CSS (Grid & Flex)</div>
-        <div class="skill">Responsive Design</div>
-        <div class="skill">Design Systems</div>
-        <div class="skill">Performance & PWAs</div>
-        <div class="skill">Prototyping & Testing</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Contact -->
-  <section id="contact">
-    <h3>Contact</h3>
-    <div class="contact-grid">
-      <form id="contactForm" class="card" novalidate>
-        <div class="form-row">
-          <label class="muted">Name<input type="text" id="name" name="name" placeholder="Your name" required></label>
-        </div>
-        <div class="form-row">
-          <label class="muted">Email<input type="email" id="email" name="email" placeholder="you@domain.com" required></label>
-        </div>
-        <div class="form-row">
-          <label class="muted">Message<textarea id="message" name="message" placeholder="Brief message" required></textarea></label>
-        </div>
-        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
-          <button class="btn" type="submit">Send message</button>
-          <button class="btn ghost" type="reset">Reset</button>
-        </div>
-        <p id="formMsg" class="muted" style="margin-top:8px"></p>
-      </form>
-
-      <aside class="card">
-        <h4>Availability</h4>
-        <p class="muted">Open to freelance and full-time opportunities. I prefer remote-first teams with strong design & product culture.</p>
-
-        <h4 style="margin-top:12px">Quick links</h4>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
-          <a class="chip" href="#">Dribbble</a>
-          <a class="chip" href="#">GitHub</a>
-          <a class="chip" href="#">LinkedIn</a>
-        </div>
-      </aside>
-    </div>
-  </section>
-
-  <footer>
-    Built with ❤️ — single-file portfolio template.
-  </footer>
-
-</main>
-
-  </div>  <!-- Modal (project details) -->  <div class="modal" id="projModal" aria-hidden="true">
-    <div class="panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <button id="modalClose" class="btn ghost" style="float:right">Close</button>
-      <h2 id="modalTitle"></h2>
-      <div class="visual"><img id="modalImg" alt="project visual"></div>
-      <p id="modalDesc" class="muted"></p>
-      <div style="height:10px"></div>
-      <div id="modalTags" style="display:flex;gap:8px;flex-wrap:wrap"></div>
-    </div>
-  </div>  <script>
-    // Mobile-first progressive JS: theme toggle, modal, form validation, animations
+  <script>
+    // -----------------------------
+    // Client-side interactions
+    // -----------------------------
     (function(){
-      const body = document.body;
-      const themeToggle = document.getElementById('themeToggle');
-      const resumeBtn = document.getElementById('resumeBtn');
-      const projectsGrid = document.getElementById('projectsGrid');
-      const modal = document.getElementById('projModal');
-      const modalTitle = document.getElementById('modalTitle');
-      const modalImg = document.getElementById('modalImg');
-      const modalDesc = document.getElementById('modalDesc');
-      const modalTags = document.getElementById('modalTags');
-      const modalClose = document.getElementById('modalClose');
+      // cached nodes
+      const html = document.documentElement;
+      const menuToggle = document.getElementById('menuToggle');
+      const mobileNav = document.getElementById('mobileNav');
+      const themeBtn = document.getElementById('themeBtn');
+      const demoBtn = document.getElementById('demoBtn');
+      const demoModal = document.getElementById('demoModal');
+      const closeDemo = document.getElementById('closeDemo');
+      const yearEl = document.getElementById('year');
+      const contactForm = document.getElementById('contactForm');
+      const contactSales = document.getElementById('contactSales');
 
-      // Theme toggle (stores preference in localStorage)
-      function setTheme(isLight){
-        if(isLight){ body.classList.add('light'); themeToggle.setAttribute('aria-pressed','true'); }
-        else { body.classList.remove('light'); themeToggle.setAttribute('aria-pressed','false'); }
-      }
-      const stored = localStorage.getItem('themeLight');
-      setTheme(stored === 'true');
-      themeToggle.addEventListener('click', ()=>{
-        const isLight = !body.classList.contains('light');
-        setTheme(isLight);
-        localStorage.setItem('themeLight', isLight);
+      // set year
+      yearEl.textContent = new Date().getFullYear();
+
+      // Mobile nav toggle
+      menuToggle.addEventListener('click', () => {
+        const expanded = menuToggle.getAttribute('aria-expanded') === 'true';
+        menuToggle.setAttribute('aria-expanded', String(!expanded));
+        mobileNav.style.display = expanded ? 'none' : 'block';
       });
 
-      // Resume (simulated download)
-      resumeBtn.addEventListener('click', ()=>{
-        const blob = new Blob([`Shariq Ali - CV\n\nThis is a placeholder CV generated from the single-file template.`], {type:'text/plain'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url; a.download = 'Shariq-Ali-CV.txt';
-        document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-      });
-
-      // Modal open
-      function openModal(data){
-        modalTitle.textContent = data.title;
-        modalDesc.textContent = data.desc;
-        modalImg.src = data.img;
-        modalImg.alt = data.title;
-        modalTags.innerHTML = '';
-        (data.tags||'').split(',').forEach(t=>{
-          const sp = document.createElement('span'); sp.className='tag'; sp.textContent = t.trim(); modalTags.appendChild(sp);
-        });
-        modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
-        // trap focus (simple)
-        modalClose.focus();
+      // theme: check saved setting or prefers-color-scheme
+      const stored = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (stored === 'light') {
+        html.classList.add('light');
+        themeBtn.textContent = '☀️';
+        themeBtn.setAttribute('aria-pressed','true');
+      } else if (stored === 'dark') {
+        html.classList.remove('light');
+        themeBtn.textContent = '🌙';
+        themeBtn.setAttribute('aria-pressed','false');
+      } else {
+        if (!prefersDark) {
+          html.classList.add('light');
+          themeBtn.textContent = '☀️';
+          themeBtn.setAttribute('aria-pressed','true');
+        } else {
+          themeBtn.textContent = '🌙';
+          themeBtn.setAttribute('aria-pressed','false');
+        }
       }
 
-      function closeModal(){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); }
-      modalClose.addEventListener('click', closeModal);
-      modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
-      document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
-
-      // Project card click
-      projectsGrid.addEventListener('click', (e)=>{
-        const card = e.target.closest('.project-card');
-        if(!card) return;
-        const data = {
-          title: card.dataset.title,
-          desc: card.dataset.desc,
-          img: card.dataset.img,
-          tags: card.dataset.tags
-        };
-        openModal(data);
+      themeBtn.addEventListener('click', () => {
+        html.classList.toggle('light');
+        const isLight = html.classList.contains('light');
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        themeBtn.textContent = isLight ? '☀️' : '🌙';
+        themeBtn.setAttribute('aria-pressed', String(isLight));
       });
 
-      // Accessibility: allow Enter key
-      projectsGrid.addEventListener('keydown', (e)=>{
-        if(e.key === 'Enter'){
-          const card = e.target.closest('.project-card'); if(!card) return; card.click();
+      // Demo modal
+      function openModal(){
+        demoModal.style.display = 'flex';
+        demoModal.setAttribute('aria-hidden','false');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeModal(){
+        demoModal.style.display = 'none';
+        demoModal.setAttribute('aria-hidden','true');
+        document.body.style.overflow = '';
+      }
+
+      demoBtn.addEventListener('click', openModal);
+      closeDemo.addEventListener('click', closeModal);
+      demoModal.addEventListener('click', (e) => {
+        if (e.target === demoModal) closeModal();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+        if (e.key === 'K' && (e.shiftKey || e.metaKey || e.ctrlKey)) {
+          // shift+K quick open
+          openModal();
         }
       });
 
-      // Simple form validation / fake submit
-      const form = document.getElementById('contactForm');
-      const formMsg = document.getElementById('formMsg');
-      form.addEventListener('submit', (e)=>{
-        e.preventDefault();
-        const name = form.name.value.trim();
-        const email = form.email.value.trim();
-        const message = form.message.value.trim();
-        if(!name || !email || !message){ formMsg.textContent = 'Please complete all fields.'; return; }
-        // basic email regex
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if(!re.test(email)){ formMsg.textContent = 'Please enter a valid email.'; return; }
-        // simulate send
-        formMsg.textContent = 'Message sent — thank you! (demo only)';
-        form.reset();
-      });
-
-      // Simple reveal animation for elements with .fade-up
-      function reveal(){
-        const elems = document.querySelectorAll('.fade-up');
-        elems.forEach((el,i)=>{
-          const rect = el.getBoundingClientRect();
-          if(rect.top < window.innerHeight - 40){ setTimeout(()=>el.classList.add('in'), i*60); }
+      // Very light testimonial carousel
+      const carousel = document.getElementById('carousel');
+      const testimonials = Array.from(carousel.querySelectorAll('.testimonial'));
+      let idx = 0;
+      const showTestimonial = (i) => {
+        testimonials.forEach((t, j) => {
+          t.style.display = j === i ? 'flex' : 'none';
         });
+      };
+      showTestimonial(idx);
+
+      document.getElementById('prevTest').addEventListener('click', () => {
+        idx = (idx - 1 + testimonials.length) % testimonials.length;
+        showTestimonial(idx);
+      });
+      document.getElementById('nextTest').addEventListener('click', () => {
+        idx = (idx + 1) % testimonials.length;
+        showTestimonial(idx);
+      });
+
+      // Simple form validation + mailto fallback
+      contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('name');
+        const email = document.getElementById('email');
+        const message = document.getElementById('message');
+
+        // Clear previous errors
+        [name, email, message].forEach(el => el.classList.remove('error'));
+
+        let ok = true;
+        if (!name.value.trim()) { name.classList.add('error'); ok = false; }
+        if (!email.value.trim() || !/^\S+@\S+\.\S+$/.test(email.value)) { email.classList.add('error'); ok = false; }
+        if (!message.value.trim()) { message.classList.add('error'); ok = false; }
+
+        if (!ok) {
+          // small accessible focus
+          const firstErr = document.querySelector('.error');
+          firstErr && firstErr.focus();
+          return;
+        }
+        // In a production app you'd post this to your API endpoint.
+        // Here we show a success UI and open mail client fallback.
+        alert('Thanks — your message is ready to send. Opening email client for fallback.');
+        const subj = encodeURIComponent(document.getElementById('subject').value || 'Contact from website');
+        const body = encodeURIComponent(`Name: ${name.value}\nEmail: ${email.value}\n\n${message.value}`);
+        window.location.href = `mailto:hello@aurora.example?subject=${subj}&body=${body}`;
+      });
+
+      // Contact sales opens contact section
+      contactSales && contactSales.addEventListener('click', () => {
+        document.getElementById('contact').scrollIntoView({behavior:'smooth'});
+      });
+
+      // small accessibility: enable focus outlines when using keyboard
+      function handleFirstTab(e){
+        if (e.key === 'Tab') {
+          document.body.classList.add('show-focus-outline');
+          window.removeEventListener('keydown', handleFirstTab);
+        }
       }
-      reveal();
-      window.addEventListener('scroll', reveal);
-      window.addEventListener('resize', reveal);
-
-      // Lazy loading improvements (images already use loading=lazy)
-
-      // Keyboard shortcuts: t = toggle theme, / = focus search (none implemented)
-      document.addEventListener('keydown', (e)=>{
-        if(e.key === 't') themeToggle.click();
-      });
-
-      // small: make external links open new tab (if any)
-      document.body.addEventListener('click', (e)=>{
-        const a = e.target.closest('a'); if(!a) return; if(a.hostname !== location.hostname) a.target='_blank';
-      });
-
+      window.addEventListener('keydown', handleFirstTab);
     })();
   </script>
 </body>
