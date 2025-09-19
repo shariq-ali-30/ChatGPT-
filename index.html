@@ -1,617 +1,442 @@
 <!doctype html>
+
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Your Name — Portfolio</title>
-
-  <!-- Google Font -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shariq Ali — Design & Frontend Portfolio</title>
+  <meta name="description" content="Design-focused, responsive and clean portfolio. Mobile-first single-file template." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-
   <style>
-    /* ---------- Reset & base ---------- */
+    /* ==========================
+       CSS VARIABLES (mobile-first)
+       ========================== */
     :root{
-      --bg: #0f1724;
+      --bg: #0f1724; /* deep navy */
       --card: #0b1220;
-      --text: #e6eef8;
-      --muted: #9fb0c8;
-      --accent: #6ee7b7;
-      --glass: rgba(255,255,255,0.03);
-      --glass-2: rgba(255,255,255,0.02);
-      --shadow: 0 10px 30px rgba(2,6,23,0.6);
-    }
-    [data-theme="light"]{
-      --bg: #f6f9fc;
-      --card: #ffffff;
-      --text: #0b1724;
-      --muted: #475569;
-      --accent: #0ea5a4;
-      --glass: rgba(2,6,23,0.02);
-      --glass-2: rgba(2,6,23,0.01);
-      --shadow: 0 8px 24px rgba(8,15,30,0.06);
-    }
+      --muted: #98a0b3;
+      --accent: #7c5cff;
+      --accent-2: #22c1c3;
+      --glass: rgba(255,255,255,0.04);
+      --radius: 14px;
+      --max-width: 1100px;
+      --ff: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      color-scheme: dark;
+    }body.light{
+  --bg: #f7fafc;
+  --card: #ffffff;
+  --muted: #5b6470;
+  --accent: #5b21b6;
+  --accent-2: #0891b2;
+  --glass: rgba(10,10,10,0.04);
+  color-scheme: light;
+}
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background: radial-gradient(1200px 600px at 10% 10%, rgba(110,231,183,0.03), transparent),
-                  linear-gradient(180deg, var(--bg), var(--bg));
-      color:var(--text);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      line-height:1.5;
-      scroll-behavior:smooth;
-    }
+/* Reset */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:var(--ff);
+  background:linear-gradient(180deg,var(--bg), #071022 120%);
+  color: #e6eef8;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  line-height:1.45;
+  padding:20px 14px;display:flex;justify-content:center;
+}
+a{color:inherit;text-decoration:none}
 
-    /* ---------- Layout ---------- */
-    header{
-      position:sticky;
-      top:12px;
-      z-index:100;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:20px;
-      padding:10px 22px;
-      max-width:1100px;
-      margin:0 auto;
-    }
-    .nav{
-      display:flex;
-      gap:12px;
-      align-items:center;
-      background:linear-gradient(180deg,var(--glass),var(--glass-2));
-      backdrop-filter: blur(6px) saturate(120%);
-      border-radius:12px;
-      box-shadow:var(--shadow);
-      padding:8px;
-    }
-    .logo{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      margin-right:8px;
-      font-weight:700;
-      font-size:16px;
-    }
-    .logo .dot{
-      width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 2px 8px rgba(0,0,0,0.2);
-    }
-    nav a{
-      color:var(--text);
-      text-decoration:none;
-      font-weight:600;
-      padding:8px 12px;border-radius:8px;
-    }
-    nav a.active, nav a:hover{
-      background:linear-gradient(90deg, rgba(255,255,255,0.03), rgba(0,0,0,0.02));
-      color:var(--accent);
-      transform:translateY(-1px);
-    }
+.container{width:100%;max-width:var(--max-width)}
 
-    .container{
-      max-width:1100px;
-      margin:32px auto;
-      padding:24px;
-    }
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;font-weight:800;color:white;font-size:18px;box-shadow:0 8px 26px rgba(0,0,0,0.35)}
+.brand h1{font-size:16px;margin:0}
+.brand p{margin:0;font-size:12px;color:var(--muted)}
 
-    /* ---------- Hero ---------- */
-    .hero{
-      display:grid;
-      grid-template-columns: 1fr 420px;
-      gap:28px;
-      align-items:center;
-    }
-    .hero-card{
-      background:linear-gradient(180deg,var(--card), rgba(255,255,255,0.01));
-      border-radius:16px;
-      padding:30px;
-      box-shadow:var(--shadow);
-      position:relative;
-      overflow:hidden;
-    }
-    .hero h1{
-      margin:0 0 8px 0;
-      font-size:34px;
-      letter-spacing:-0.02em;
-    }
-    .hero p.lead{
-      color:var(--muted);
-      margin:0 0 18px 0;
-    }
-    .cta-row{
-      display:flex;
-      gap:12px;
-      margin-top:18px;
-    }
-    .btn{
-      padding:10px 14px;
-      border-radius:10px;
-      border: none;
-      cursor:pointer;
-      font-weight:700;
-    }
-    .btn-primary{
-      background:linear-gradient(90deg,var(--accent), #34d399);
-      color:#052326;
-      box-shadow: 0 8px 26px rgba(82,220,179,0.12);
-    }
-    .btn-ghost{
-      background:transparent;
-      color:var(--text);
-      border:1px solid rgba(255,255,255,0.04);
-    }
+.controls{display:flex;gap:8px;align-items:center}
+.btn{background:var(--glass);border:1px solid rgba(255,255,255,0.04);padding:9px 14px;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer;backdrop-filter:blur(6px)}
+.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06)}
 
-    /* profile box */
-    .profile{
-      display:flex;
-      gap:16px;
-      align-items:center;
-    }
-    .avatar{
-      width:120px;height:120px;border-radius:16px;overflow:hidden;flex-shrink:0;
-      box-shadow: 0 10px 30px rgba(2,6,23,0.5);
-      border:3px solid rgba(255,255,255,0.03);
-    }
-    .avatar img{width:100%;height:100%;object-fit:cover;display:block}
-    .meta small{display:block;color:var(--muted);font-weight:600}
-    .meta h3{margin:4px 0 0 0}
+/* Hero */
+.hero{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border-radius:var(--radius);padding:18px;display:grid;gap:14px}
+.hero-grid{display:grid;grid-template-columns:1fr;gap:16px}
+.intro h2{margin:0;font-size:20px}
+.intro p{margin:0;color:var(--muted)}
+.hero-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
 
-    /* ---------- Projects ---------- */
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(3,1fr);
-      gap:18px;
-      margin-top:26px;
-    }
-    .card{
-      background:var(--card);
-      padding:14px;
-      border-radius:12px;
-      box-shadow:0 8px 20px rgba(2,6,23,0.35);
-      overflow:hidden;
-    }
-    .card .thumb{height:140px;border-radius:10px;overflow:hidden}
-    .card .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-    .card h4{margin:10px 0 6px 0}
-    .card p{margin:0;color:var(--muted);font-size:14px}
+.hero-visual{border-radius:12px;overflow:hidden;min-height:160px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center}
+.hero-visual img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(6%)}
 
-    /* ---------- Skills & contact ---------- */
-    .two-col{
-      display:grid;
-      grid-template-columns: 1fr 360px;
-      gap:20px;
-      margin-top:28px;
-      align-items:start;
-    }
-    .skills{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:8px;
-    }
-    .skill{
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
-      padding:8px 10px;border-radius:10px;font-weight:700;color:var(--muted);
-    }
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.stat{background:linear-gradient(180deg,transparent, rgba(255,255,255,0.01));padding:10px 12px;border-radius:12px;font-weight:700;font-size:13px;color:var(--muted)}
 
-    .contact-card{
-      padding:18px;border-radius:12px;background:linear-gradient(180deg,var(--card),var(--glass));
-      box-shadow:var(--shadow);
-    }
-    .contact-card label{display:block;font-weight:700;margin-top:10px;color:var(--muted)}
-    .contact-card input,.contact-card textarea{
-      width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);
-      background:transparent;color:var(--text);margin-top:6px;font-size:14px;
-    }
-    .contact-card .muted{font-size:13px;color:var(--muted);margin-top:6px}
+/* Sections */
+section{margin-top:20px}
+h3{margin:0 0 12px 0;font-size:16px}
 
-    /* ---------- Footer ---------- */
-    footer{max-width:1100px;margin:40px auto;padding:20px;text-align:center;color:var(--muted)}
+.projects-grid{display:grid;grid-template-columns:1fr;gap:12px}
+.card{background:var(--card);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 8px 22px rgba(2,6,23,0.6)}
+.project-card{display:flex;gap:12px;align-items:flex-start;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease}
+.project-card:focus,.project-card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(2,6,23,0.7)}
+.project-thumb{flex:0 0 110px;height:84px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:white;font-weight:800;font-size:15px;overflow:hidden}
+.project-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.project-meta{flex:1}
+.project-meta p{margin:6px 0 0 0;color:var(--muted);font-size:13px}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.tag{font-size:12px;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.03);font-weight:700}
 
-    /* ---------- Responsive ---------- */
-    @media (max-width:980px){
-      .hero{grid-template-columns: 1fr}
-      .grid{grid-template-columns: repeat(2,1fr)}
-      .two-col{grid-template-columns: 1fr}
-      header{padding:8px 16px}
-    }
-    @media (max-width:600px){
-      .grid{grid-template-columns: 1fr}
-      .avatar{width:92px;height:92px}
-      .hero h1{font-size:28px}
-      nav a{padding:8px}
-    }
+/* Modal */
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(180deg, rgba(2,6,23,0.7), rgba(2,6,23,0.86));z-index:60;padding:24px}
+.modal.open{display:flex}
+.modal .panel{width:100%;max-width:980px;background:var(--card);padding:18px;border-radius:14px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 24px 60px rgba(2,6,23,0.8)}
+.modal .panel .visual{height:260px;border-radius:10px;overflow:hidden;margin-bottom:12px}
+.modal .panel img{width:100%;height:100%;object-fit:cover;display:block}
 
-    /* ---------- Small utility animations ---------- */
-    .fade-in{animation:fadeUp .7s ease both}
-    @keyframes fadeUp{from{opacity:0; transform:translateY(10px)} to{opacity:1;transform:none}}
+/* Skills */
+.skill-list{display:flex;flex-wrap:wrap;gap:10px}
+.skill{background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent);padding:8px 10px;border-radius:10px;font-weight:700}
 
-    /* modal */
-    .modal-backdrop{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.6);z-index:200}
-    .modal{width:min(920px,94%);background:var(--card);border-radius:12px;padding:18px;box-shadow:var(--shadow)}
-    .modal .thumb{height:360px;border-radius:10px;overflow:hidden}
-    .modal .thumb img{width:100%;height:100%;object-fit:cover}
-    .close-btn{position:absolute;right:14px;top:14px;background:transparent;border-radius:8px;padding:8px;border:none;color:var(--muted);cursor:pointer}
+/* Contact */
+.contact-grid{display:grid;gap:12px}
+input,textarea,select{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;font-size:14px}
+textarea{min-height:120px}
+.form-row{display:grid;gap:10px}
 
-    /* tiny chips */
-    .chip{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.02);font-weight:700;color:var(--muted);font-size:13px;margin-right:6px}
+footer{margin-top:20px;text-align:center;color:var(--muted);font-size:13px}
+
+/* Desktop */
+@media(min-width:760px){
+  body{padding:36px}
+  .hero-grid{grid-template-columns:1fr 380px}
+  .projects-grid{grid-template-columns:repeat(2,1fr)}
+  .contact-grid{grid-template-columns:1fr 320px}
+}
+@media(min-width:1040px){
+  .projects-grid{grid-template-columns:repeat(3,1fr)}
+}
+
+/* helpers */
+.muted{color:var(--muted)}
+.center{display:flex;align-items:center;justify-content:center}
+
+/* small animation */
+.fade-up{opacity:0;transform:translateY(8px);transition:opacity .45s ease,transform .45s ease}
+.fade-up.in{opacity:1;transform:none}
+
   </style>
 </head>
 <body>
-
-  <!-- ===== HEADER / NAV ===== -->
-  <header>
-    <div style="display:flex;align-items:center;">
-      <div class="logo">
-        <div class="dot" aria-hidden="true"></div>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo">SA</div>
         <div>
-          <div style="font-size:12px;color:var(--muted);font-weight:600">Portfolio</div>
-          <div style="font-size:15px">Your Name</div>
+          <h1>Shariq Ali</h1>
+          <p class="muted">Design-focused Frontend Developer</p>
+        </div>
+      </div><div class="controls">
+    <button class="btn ghost" id="resumeBtn">Download CV</button>
+    <div class="nav-toggle">
+      <button class="btn" id="themeToggle" aria-pressed="false" title="Toggle theme">🌗</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero card" aria-labelledby="introTitle">
+    <div class="hero-grid">
+      <div class="intro">
+        <h2 id="introTitle">Salaam — main Shariq. Main clean UI aur responsive design banata hoon.</h2>
+        <p class="muted">Mobile-first approach, accessible components, aur production-ready markup. Focus: design systems, component libraries, and polished micro-interactions.</p>
+
+        <div class="hero-actions">
+          <a class="btn" href="#projects">Projects</a>
+          <a class="btn ghost" href="#contact">Hire / Contact</a>
+        </div>
+
+        <div class="stats" aria-hidden>
+          <div class="stat">8+ Projects</div>
+          <div class="stat">UI/UX & Frontend</div>
+          <div class="stat">Mobile-first</div>
         </div>
       </div>
 
-      <nav class="nav" aria-label="Main navigation">
-        <a href="#home" class="nav-link active">Home</a>
-        <a href="#projects" class="nav-link">Projects</a>
-        <a href="#about" class="nav-link">About</a>
-        <a href="#contact" class="nav-link">Contact</a>
-      </nav>
-    </div>
-
-    <div style="display:flex;align-items:center;gap:8px;">
-      <button id="themeToggle" class="btn btn-ghost" title="Toggle theme">🌙</button>
-      <a class="btn btn-primary" href="#contact">Hire me</a>
-    </div>
-  </header>
-
-  <main class="container">
-
-    <!-- ===== HERO ===== -->
-    <section id="home" class="hero fade-in">
-      <article class="hero-card" aria-labelledby="hero-title">
-        <div class="profile" style="align-items:flex-start">
-          <div class="avatar" title="Replace this with your photo">
-            <!-- Replace this image with your profile photo. -->
-            <img id="heroAvatar" src="https://picsum.photos/seed/profile/600/600" alt="Profile picture">
-          </div>
-
-          <div style="flex:1">
-            <small style="color:var(--muted);font-weight:700">Hello, I'm</small>
-            <h1 id="hero-title">Your Name — Frontend Developer</h1>
-            <p class="lead">I design & build delightful, accessible web experiences. I specialize in React, modern CSS, and clean UI/UX.</p>
-
-            <div class="cta-row">
-              <button class="btn btn-primary" id="downloadResume">Download Resume</button>
-              <a class="btn btn-ghost" href="#projects">View Projects</a>
-            </div>
-
-            <div style="margin-top:12px;color:var(--muted);font-size:13px;display:flex;gap:10px;align-items:center">
-              <div class="chip">Open to work</div>
-              <div class="chip">Remote-friendly</div>
-              <div class="chip">Freelance</div>
-            </div>
-          </div>
+      <aside class="card" style="align-self:start">
+        <div class="hero-visual" aria-hidden>
+          <!-- Hero image (internet dummy) -->
+          <img alt="abstract hero" loading="lazy" src="https://picsum.photos/id/1018/1200/600">
         </div>
 
-        <!-- subtle bg image (replaceable) -->
-        <div style="position:absolute;right:-60px;bottom:-60px;opacity:0.06;pointer-events:none">
-          <img src="https://picsum.photos/seed/desk/800/800" alt="" style="width:420px;height:420px;object-fit:cover;border-radius:14px;filter:blur(0.5px)">
+        <h3>Quick profile</h3>
+        <p class="muted">I design interfaces that feel fast and polished. I enjoy building design systems and working closely with product teams to ship delightful experiences.</p>
+        <div style="height:12px"></div>
+        <div class="skill-list">
+          <div class="skill">Design Systems</div>
+          <div class="skill">Responsive UI</div>
+          <div class="skill">Accessibility</div>
+          <div class="skill">Interactions</div>
+          <div class="skill">React / HTML / CSS</div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects">
+    <h3>Projects</h3>
+    <div class="projects-grid" id="projectsGrid">
+
+      <!-- Project 1 -->
+      <article class="card project-card fade-up" tabindex="0" data-title="Design System Library" data-desc="A component library with tokens, accessible components, and storybook integration." data-img="https://picsum.photos/id/1005/800/600" data-tags="Design,Components,Accessibility">
+        <div class="project-thumb"><img alt="DSL" loading="lazy" src="https://picsum.photos/id/1005/300/200"></div>
+        <div class="project-meta">
+          <strong>Design System Library</strong>
+          <p class="muted">Component tokens, accessible components, and Storybook-based docs.</p>
+          <div class="tags"><span class="tag">Design</span><span class="tag">React</span><span class="tag">Accessibility</span></div>
         </div>
       </article>
 
-      <!-- Quick info / highlights column -->
-      <aside style="display:flex;flex-direction:column;gap:12px">
-        <div class="hero-card" style="display:flex;flex-direction:column;gap:12px">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div>
-              <small style="color:var(--muted)">Experience</small>
-              <h3 style="margin:4px 0 0 0">5+ years</h3>
-            </div>
-            <div style="text-align:right">
-              <small style="color:var(--muted)">Location</small>
-              <h3 style="margin:4px 0 0 0">Your City</h3>
-            </div>
-          </div>
-
-          <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <div style="flex:1;min-width:160px">
-              <small style="color:var(--muted)">Primary</small>
-              <div style="font-weight:800;margin-top:6px">React · TypeScript</div>
-            </div>
-            <div style="flex:1;min-width:160px">
-              <small style="color:var(--muted)">Design</small>
-              <div style="font-weight:800;margin-top:6px">Figma · Prototyping</div>
-            </div>
-          </div>
-
-          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
-            <!-- socials -->
-            <a class="btn btn-ghost" href="#" title="GitHub">GH</a>
-            <a class="btn btn-ghost" href="#" title="LinkedIn">IN</a>
-            <a class="btn btn-ghost" href="#" title="Dribbble">DB</a>
-          </div>
-        </div>
-
-        <div class="hero-card">
-          <small style="color:var(--muted)">Featured</small>
-          <h4 style="margin-top:8px">Design system & component library</h4>
-          <p style="margin:8px 0 0 0;color:var(--muted)">Built a reusable component system used across 3 products; delivered a 30% faster dev speed.</p>
-        </div>
-      </aside>
-    </section>
-
-    <!-- ===== PROJECTS ===== -->
-    <section id="projects" style="margin-top:34px">
-      <h2 style="margin:0 0 12px 0">Projects</h2>
-      <p style="margin:0 0 18px 0;color:var(--muted)">A curated selection of projects. Click any card to open details.</p>
-
-      <div class="grid" id="projectsGrid">
-        <!-- Project cards (replace thumbs with your images) -->
-        <article class="card" data-project='{"title":"Modern Dashboard","desc":"Analytics dashboard with realtime charts.","img":"https://picsum.photos/seed/p1/900/600","tags":["React","D3","Charting"]}'>
-          <div class="thumb"><img src="https://picsum.photos/seed/p1/900/600" alt="Project 1"></div>
-          <h4>Modern Dashboard</h4>
-          <p>Analytics dashboard with realtime charts and custom components.</p>
-        </article>
-
-        <article class="card" data-project='{"title":"E-commerce UI","desc":"Accessible, performant storefront.","img":"https://picsum.photos/seed/p2/900/600","tags":["Next.js","Stripe","A11y"]}'>
-          <div class="thumb"><img src="https://picsum.photos/seed/p2/900/600" alt="Project 2"></div>
-          <h4>E-commerce UI</h4>
-          <p>Accessible, performant storefront with progressive enhancement.</p>
-        </article>
-
-        <article class="card" data-project='{"title":"Design System","desc":"Reusable UI library & docs.","img":"https://picsum.photos/seed/p3/900/600","tags":["Storybook","Figma"]}'>
-          <div class="thumb"><img src="https://picsum.photos/seed/p3/900/600" alt="Project 3"></div>
-          <h4>Design System</h4>
-          <p>Component library and design tokens with documentation site.</p>
-        </article>
-
-        <article class="card" data-project='{"title":"Landing Page","desc":"Conversion focused marketing page.","img":"https://picsum.photos/seed/p4/900/600","tags":["HTML","CSS","Animations"]}'>
-          <div class="thumb"><img src="https://picsum.photos/seed/p4/900/600" alt="Project 4"></div>
-          <h4>Landing Page</h4>
-          <p>Fast, accessible marketing page with A/B optimized content.</p>
-        </article>
-
-        <article class="card" data-project='{"title":"Mobile App UI","desc":"Cross-platform design for Android/iOS.","img":"https://picsum.photos/seed/p5/900/600","tags":["React Native","Expo"]}'>
-          <div class="thumb"><img src="https://picsum.photos/seed/p5/900/600" alt="Project 5"></div>
-          <h4>Mobile App UI</h4>
-          <p>Polished cross-platform UI shipped to store with great UX.</p>
-        </article>
-
-        <article class="card" data-project='{"title":"Performance Audit","desc":"Optimized Core Web Vitals.","img":"https://picsum.photos/seed/p6/900/600","tags":["Lighthouse","Perf"]}'>
-          <div class="thumb"><img src="https://picsum.photos/seed/p6/900/600" alt="Project 6"></div>
-          <h4>Performance Audit</h4>
-          <p>Improved loading speed and accessibility across the site.</p>
-        </article>
-      </div>
-    </section>
-
-    <!-- Modal (project detail) -->
-    <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-hidden="true">
-      <div class="modal" role="document">
-        <button id="closeModal" class="close-btn" aria-label="Close">✕</button>
-        <div id="modalContent">
-          <div style="display:flex;gap:18px;flex-direction:column">
-            <div class="thumb"><img id="modalImg" src="" alt=""></div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
-              <div>
-                <h3 id="modalTitle" style="margin:0">Project title</h3>
-                <p id="modalDesc" style="margin:6px 0 0 0;color:var(--muted)"></p>
-              </div>
-              <div id="modalTags" style="display:flex;gap:8px;flex-wrap:wrap"></div>
-            </div>
-            <div style="display:flex;gap:10px;margin-top:12px">
-              <a class="btn btn-primary" href="#" id="viewSite">View site</a>
-              <button class="btn btn-ghost" id="viewCode">Source</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===== ABOUT & SKILLS ===== -->
-    <section id="about" class="two-col">
-      <article>
-        <h2>About me</h2>
-        <p style="color:var(--muted)">I’m a frontend developer focused on building accessible, high-performance web apps. I love component-driven development and pixel-perfect UI.</p>
-
-        <div style="margin-top:12px">
-          <small style="color:var(--muted)">What I do</small>
-          <ul style="margin-top:8px;color:var(--muted);line-height:1.8">
-            <li>Design & prototyping (Figma)</li>
-            <li>Front-end development (React, TypeScript)</li>
-            <li>Performance optimization & accessibility</li>
-          </ul>
-        </div>
-
-        <div style="margin-top:14px">
-          <small style="color:var(--muted)">Tools & technologies</small>
-          <div class="skills" aria-hidden="true">
-            <span class="skill">React</span>
-            <span class="skill">TypeScript</span>
-            <span class="skill">Next.js</span>
-            <span class="skill">GraphQL</span>
-            <span class="skill">Tailwind / CSS</span>
-            <span class="skill">Figma</span>
-            <span class="skill">Jest</span>
-          </div>
+      <!-- Project 2 -->
+      <article class="card project-card fade-up" tabindex="0" data-title="E‑commerce UI" data-desc="Fast, accessible checkout flows with focus on conversion and trust signals." data-img="https://picsum.photos/id/1011/800/600" data-tags="E‑commerce,Payments,UX">
+        <div class="project-thumb"><img alt="Ecommerce" loading="lazy" src="https://picsum.photos/id/1011/300/200"></div>
+        <div class="project-meta">
+          <strong>E‑commerce UI</strong>
+          <p class="muted">Fast, accessible checkout flows with focus on conversion and trust.</p>
+          <div class="tags"><span class="tag">UX</span><span class="tag">Payments</span><span class="tag">Performance</span></div>
         </div>
       </article>
 
-      <aside class="contact-card" id="contact">
-        <h3>Contact</h3>
-        <p class="muted">Interested in working together? Fill out the form — this is demo-only (no backend). Replace the handler or wire it to your service.</p>
+      <!-- Project 3 -->
+      <article class="card project-card fade-up" tabindex="0" data-title="Portfolio CMS" data-desc="A headless CMS-powered portfolio with markdown support and quick authoring." data-img="https://picsum.photos/id/1025/800/600" data-tags="CMS,Headless,Performance">
+        <div class="project-thumb"><img alt="Portfolio CMS" loading="lazy" src="https://picsum.photos/id/1025/300/200"></div>
+        <div class="project-meta">
+          <strong>Portfolio CMS</strong>
+          <p class="muted">Headless CMS, markdown support, and blazing-fast previews.</p>
+          <div class="tags"><span class="tag">CMS</span><span class="tag">Static</span><span class="tag">Preview</span></div>
+        </div>
+      </article>
 
-        <form id="contactForm" onsubmit="return false">
-          <label for="name">Name</label>
-          <input id="name" required placeholder="Your name">
+      <!-- Project 4 -->
+      <article class="card project-card fade-up" tabindex="0" data-title="Mobile App Mockups" data-desc="High-fidelity mobile mockups and interactive prototypes for user testing." data-img="https://picsum.photos/id/1000/800/600" data-tags="Mobile,Prototyping,Testing">
+        <div class="project-thumb"><img alt="Mobile" loading="lazy" src="https://picsum.photos/id/1000/300/200"></div>
+        <div class="project-meta">
+          <strong>Mobile App Mockups</strong>
+          <p class="muted">Interactive prototypes and user-tested flows for mobile products.</p>
+          <div class="tags"><span class="tag">Prototyping</span><span class="tag">Testing</span></div>
+        </div>
+      </article>
 
-          <label for="email">Email</label>
-          <input id="email" type="email" required placeholder="you@example.com">
+      <!-- Project 5 -->
+      <article class="card project-card fade-up" tabindex="0" data-title="Marketing Site Redesign" data-desc="Redesigned marketing site with improved conversions and analytics-driven content." data-img="https://picsum.photos/id/1031/800/600" data-tags="Marketing,Analytics,Conversion">
+        <div class="project-thumb"><img alt="Marketing" loading="lazy" src="https://picsum.photos/id/1031/300/200"></div>
+        <div class="project-meta">
+          <strong>Marketing Site Redesign</strong>
+          <p class="muted">Conversion-focused pages and analytics-driven content experiments.</p>
+          <div class="tags"><span class="tag">Analytics</span><span class="tag">CRO</span></div>
+        </div>
+      </article>
 
-          <label for="message">Message</label>
-          <textarea id="message" rows="5" required placeholder="Tell me about your project..."></textarea>
+      <!-- Project 6 -->
+      <article class="card project-card fade-up" tabindex="0" data-title="Dashboard & Data Viz" data-desc="Design and build dashboards with performant charts and exportable reports." data-img="https://picsum.photos/id/1043/800/600" data-tags="Dashboard,Charts,Data">
+        <div class="project-thumb"><img alt="Dashboard" loading="lazy" src="https://picsum.photos/id/1043/300/200"></div>
+        <div class="project-meta">
+          <strong>Dashboard & Data Viz</strong>
+          <p class="muted">Performant charts, exportable reports, and data-driven components.</p>
+          <div class="tags"><span class="tag">Data</span><span class="tag">Charts</span></div>
+        </div>
+      </article>
 
-          <div style="display:flex;gap:8px;margin-top:12px">
-            <button id="sendBtn" class="btn btn-primary">Send message</button>
-            <button id="clearBtn" class="btn btn-ghost" type="reset">Clear</button>
-          </div>
+    </div>
+  </section>
 
-          <div id="formMsg" class="muted" style="margin-top:10px"></div>
-        </form>
+  <!-- Skills -->
+  <section>
+    <h3>Skills</h3>
+    <div class="card">
+      <div class="skill-list">
+        <div class="skill">HTML & Accessibility</div>
+        <div class="skill">Modern CSS (Grid & Flex)</div>
+        <div class="skill">Responsive Design</div>
+        <div class="skill">Design Systems</div>
+        <div class="skill">Performance & PWAs</div>
+        <div class="skill">Prototyping & Testing</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <h3>Contact</h3>
+    <div class="contact-grid">
+      <form id="contactForm" class="card" novalidate>
+        <div class="form-row">
+          <label class="muted">Name<input type="text" id="name" name="name" placeholder="Your name" required></label>
+        </div>
+        <div class="form-row">
+          <label class="muted">Email<input type="email" id="email" name="email" placeholder="you@domain.com" required></label>
+        </div>
+        <div class="form-row">
+          <label class="muted">Message<textarea id="message" name="message" placeholder="Brief message" required></textarea></label>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
+          <button class="btn" type="submit">Send message</button>
+          <button class="btn ghost" type="reset">Reset</button>
+        </div>
+        <p id="formMsg" class="muted" style="margin-top:8px"></p>
+      </form>
+
+      <aside class="card">
+        <h4>Availability</h4>
+        <p class="muted">Open to freelance and full-time opportunities. I prefer remote-first teams with strong design & product culture.</p>
+
+        <h4 style="margin-top:12px">Quick links</h4>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+          <a class="chip" href="#">Dribbble</a>
+          <a class="chip" href="#">GitHub</a>
+          <a class="chip" href="#">LinkedIn</a>
+        </div>
       </aside>
-    </section>
-
-  </main>
+    </div>
+  </section>
 
   <footer>
-    <div>© <span id="year"></span> Your Name — Built with ❤️</div>
-    <div style="margin-top:8px;color:var(--muted)">Tip: Replace placeholder images (picsum.photos) with your own images in the HTML where commented.</div>
+    Built with ❤️ — single-file portfolio template.
   </footer>
- <script>
-    // ---------- Small helpers ----------
-    const $ = q => document.querySelector(q);
-    const $$ = q => Array.from(document.querySelectorAll(q));
 
-    // Year
-    document.getElementById('year').textContent = new Date().getFullYear();
+</main>
 
-    // Theme toggle (persist in localStorage)
-    const themeToggle = document.getElementById('themeToggle');
-    const storedTheme = localStorage.getItem('theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme:light)').matches ? 'light' : 'dark');
-    document.documentElement.setAttribute('data-theme', storedTheme);
-    themeToggle.textContent = storedTheme === 'light' ? '🌞' : '🌙';
+  </div>  <!-- Modal (project details) -->  <div class="modal" id="projModal" aria-hidden="true">
+    <div class="panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button id="modalClose" class="btn ghost" style="float:right">Close</button>
+      <h2 id="modalTitle"></h2>
+      <div class="visual"><img id="modalImg" alt="project visual"></div>
+      <p id="modalDesc" class="muted"></p>
+      <div style="height:10px"></div>
+      <div id="modalTags" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+    </div>
+  </div>  <script>
+    // Mobile-first progressive JS: theme toggle, modal, form validation, animations
+    (function(){
+      const body = document.body;
+      const themeToggle = document.getElementById('themeToggle');
+      const resumeBtn = document.getElementById('resumeBtn');
+      const projectsGrid = document.getElementById('projectsGrid');
+      const modal = document.getElementById('projModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalImg = document.getElementById('modalImg');
+      const modalDesc = document.getElementById('modalDesc');
+      const modalTags = document.getElementById('modalTags');
+      const modalClose = document.getElementById('modalClose');
 
-    themeToggle.addEventListener('click', () => {
-      const current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
-      const next = current === 'light' ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('theme', next);
-      themeToggle.textContent = next === 'light' ? '🌞' : '🌙';
-    });
-
-    // Smooth nav active on scroll
-    const navLinks = $$('.nav-link');
-    const sections = navLinks.map(a => document.querySelector(a.getAttribute('href')));
-    function onScroll(){
-      const y = window.scrollY + 120;
-      for(let i=sections.length-1;i>=0;i--){
-        const s = sections[i];
-        if(!s) continue;
-        if(y >= s.offsetTop){
-          navLinks.forEach(n => n.classList.remove('active'));
-          navLinks[i].classList.add('active');
-          break;
-        }
+      // Theme toggle (stores preference in localStorage)
+      function setTheme(isLight){
+        if(isLight){ body.classList.add('light'); themeToggle.setAttribute('aria-pressed','true'); }
+        else { body.classList.remove('light'); themeToggle.setAttribute('aria-pressed','false'); }
       }
-    }
-    window.addEventListener('scroll', onScroll);
-    onScroll();
+      const stored = localStorage.getItem('themeLight');
+      setTheme(stored === 'true');
+      themeToggle.addEventListener('click', ()=>{
+        const isLight = !body.classList.contains('light');
+        setTheme(isLight);
+        localStorage.setItem('themeLight', isLight);
+      });
 
-    // Projects modal
-    const projectCards = $$('#projectsGrid .card');
-    const modalBackdrop = $('#modalBackdrop');
-    const modalImg = $('#modalImg');
-    const modalTitle = $('#modalTitle');
-    const modalDesc = $('#modalDesc');
-    const modalTags = $('#modalTags');
+      // Resume (simulated download)
+      resumeBtn.addEventListener('click', ()=>{
+        const blob = new Blob([`Shariq Ali - CV\n\nThis is a placeholder CV generated from the single-file template.`], {type:'text/plain'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = 'Shariq-Ali-CV.txt';
+        document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+      });
 
-    projectCards.forEach(card => {
-      card.addEventListener('click', () => {
-        const data = JSON.parse(card.getAttribute('data-project'));
-        modalImg.src = data.img;
+      // Modal open
+      function openModal(data){
         modalTitle.textContent = data.title;
         modalDesc.textContent = data.desc;
+        modalImg.src = data.img;
+        modalImg.alt = data.title;
         modalTags.innerHTML = '';
-        (data.tags || []).forEach(t => {
-          const el = document.createElement('div');
-          el.className = 'chip';
-          el.textContent = t;
-          modalTags.appendChild(el);
+        (data.tags||'').split(',').forEach(t=>{
+          const sp = document.createElement('span'); sp.className='tag'; sp.textContent = t.trim(); modalTags.appendChild(sp);
         });
+        modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
+        // trap focus (simple)
+        modalClose.focus();
+      }
 
-        modalBackdrop.style.display = 'flex';
-        modalBackdrop.setAttribute('aria-hidden', 'false');
+      function closeModal(){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); }
+      modalClose.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
+      document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
+
+      // Project card click
+      projectsGrid.addEventListener('click', (e)=>{
+        const card = e.target.closest('.project-card');
+        if(!card) return;
+        const data = {
+          title: card.dataset.title,
+          desc: card.dataset.desc,
+          img: card.dataset.img,
+          tags: card.dataset.tags
+        };
+        openModal(data);
       });
-    });
 
-    $('#closeModal').addEventListener('click', closeModal);
-    modalBackdrop.addEventListener('click', (e) => { if(e.target === modalBackdrop) closeModal(); });
-    function closeModal(){
-      modalBackdrop.style.display = 'none';
-      modalBackdrop.setAttribute('aria-hidden', 'true');
-    }
-
-    // Contact form basic validation + fake send
-    const contactForm = $('#contactForm');
-    contactForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = $('#name').value.trim();
-      const email = $('#email').value.trim();
-      const msg = $('#message').value.trim();
-
-      if(!name || !email || !msg){
-        $('#formMsg').textContent = 'Please fill all fields.';
-        return;
-      }
-      // very simple email check
-      if(!/^\S+@\S+\.\S+$/.test(email)){
-        $('#formMsg').textContent = 'Please enter a valid email address.';
-        return;
-      }
-
-      $('#sendBtn').textContent = 'Sending...';
-      $('#sendBtn').disabled = true;
-
-      // This is a demo. Replace with real endpoint (fetch to your API or Formspree, Netlify forms, etc.)
-      setTimeout(() => {
-        $('#formMsg').textContent = 'Thanks! Message queued (demo). Replace handler with real backend.';
-        $('#sendBtn').textContent = 'Send message';
-        $('#sendBtn').disabled = false;
-        contactForm.reset();
-      }, 900);
-    });
-
-    // Resume download demo (replace URL with your resume)
-    $('#downloadResume').addEventListener('click', () => {
-      // Replace this with your actual resume URL (PDF)
-      const resumeUrl = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
-      const a = document.createElement('a');
-      a.href = resumeUrl;
-      a.download = 'Resume.pdf';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-    });
-
-    // Project card keyboard accessibility
-    projectCards.forEach(c => {
-      c.tabIndex = 0;
-      c.addEventListener('keydown', (e) => {
-        if(e.key === 'Enter' || e.key === ' ') c.click();
+      // Accessibility: allow Enter key
+      projectsGrid.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter'){
+          const card = e.target.closest('.project-card'); if(!card) return; card.click();
+        }
       });
-    });
 
-    // Quick replace helpers: click avatar to change (demo)
-    const heroAvatar = document.getElementById('heroAvatar');
-    heroAvatar.style.cursor = 'pointer';
-    heroAvatar.title = 'Click to quickly change avatar to another placeholder (demo)';
-    heroAvatar.addEventListener('click', () => {
-      // This cycles avatar seed so you can see different images quickly; replace src with your image URL.
-      const seed = Math.floor(Math.random()*10000);
-      heroAvatar.src = `https://picsum.photos/seed/profile${seed}/600/600`;
-    });
+      // Simple form validation / fake submit
+      const form = document.getElementById('contactForm');
+      const formMsg = document.getElementById('formMsg');
+      form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        const name = form.name.value.trim();
+        const email = form.email.value.trim();
+        const message = form.message.value.trim();
+        if(!name || !email || !message){ formMsg.textContent = 'Please complete all fields.'; return; }
+        // basic email regex
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if(!re.test(email)){ formMsg.textContent = 'Please enter a valid email.'; return; }
+        // simulate send
+        formMsg.textContent = 'Message sent — thank you! (demo only)';
+        form.reset();
+      });
 
-    // Accessibility: focus outline for keyboard users only
-    function handleFirstTab(e) {
-      if(e.key === 'Tab'){
-        document.body.classList.add('show-focus-outline');
-        window.removeEventListener('keydown', handleFirstTab);
+      // Simple reveal animation for elements with .fade-up
+      function reveal(){
+        const elems = document.querySelectorAll('.fade-up');
+        elems.forEach((el,i)=>{
+          const rect = el.getBoundingClientRect();
+          if(rect.top < window.innerHeight - 40){ setTimeout(()=>el.classList.add('in'), i*60); }
+        });
       }
-    }
-    window.addEventListener('keydown', handleFirstTab);
+      reveal();
+      window.addEventListener('scroll', reveal);
+      window.addEventListener('resize', reveal);
+
+      // Lazy loading improvements (images already use loading=lazy)
+
+      // Keyboard shortcuts: t = toggle theme, / = focus search (none implemented)
+      document.addEventListener('keydown', (e)=>{
+        if(e.key === 't') themeToggle.click();
+      });
+
+      // small: make external links open new tab (if any)
+      document.body.addEventListener('click', (e)=>{
+        const a = e.target.closest('a'); if(!a) return; if(a.hostname !== location.hostname) a.target='_blank';
+      });
+
+    })();
   </script>
 </body>
 </html>
